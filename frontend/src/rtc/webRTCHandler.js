@@ -1,5 +1,5 @@
 import store from '../store/store'
-import { setLocalStream, setRemoteStreams } from '../store/actions/roomActions'
+import { setChatMessages, setChosenStream, setLocalStream, setRemoteStreams, setSharedNotepadContent } from '../store/actions/roomActions'
 import Peer from 'simple-peer'
 import * as socketConnection from './socketConnection'
 
@@ -13,25 +13,25 @@ const defaultConstraints = {
 }
 
 const getConfiguration = () => {
-    const turnIceServers = {
-        iceServers: [
-            {
-                urls: [
-                    "turn:fr-turn1.xirsys.com:80?transport=udp",
-                    "turn:fr-turn1.xirsys.com:3478?transport=udp",
-                    "turn:fr-turn1.xirsys.com:80?transport=tcp",
-                    "turn:fr-turn1.xirsys.com:3478?transport=tcp",
-                    "turns:fr-turn1.xirsys.com:443?transport=tcp",
-                    "turns:fr-turn1.xirsys.com:5349?transport=tcp"
-                ],
-                username: "oMl666wMt5n_HvQNsp96b4000WnuX5Mi8tihVR9Vu2FdQ47ANgKQJntrqmCGfOC3AAAAAGGJwvptYXJpbjc4",
-                credential: "5552b7cc-40f5-11ec-b4eb-0242ac120004"
-            },
-            {
-                urls: "stun:fr-turn1.xirsys.com"
-            }
-        ]
-    }
+    const turnIceServers = null
+    //     iceServers: [
+    //         {
+    //             urls: [
+    //                 "turn:fr-turn1.xirsys.com:80?transport=udp",
+    //                 "turn:fr-turn1.xirsys.com:3478?transport=udp",
+    //                 "turn:fr-turn1.xirsys.com:80?transport=tcp",
+    //                 "turn:fr-turn1.xirsys.com:3478?transport=tcp",
+    //                 "turns:fr-turn1.xirsys.com:443?transport=tcp",
+    //                 "turns:fr-turn1.xirsys.com:5349?transport=tcp"
+    //             ],
+    //             username: "VIcxuefwdkhIEvCTWIAqDG7hmgMA35VuLP27A_HVqh-5CKyt_0BxuXBLecDD-sXQAAAAAGLP7ExsYXN0SG9wZU9mUmVhbHR5",
+    //             credential: "9d761e10-035d-11ed-a4d1-0242ac120004"
+    //         },
+    //         {
+    //             urls: "stun:fr-turn1.xirsys.com"
+    //         }
+    //     ]
+    // }
 
     if (turnIceServers) {
         return turnIceServers
@@ -40,7 +40,7 @@ const getConfiguration = () => {
         return {
             iceServers: [
                 {
-                    urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
+                    urls: ['stun:fr-turn1.xirsys.com','stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
                 },
             ],
         }
@@ -124,27 +124,37 @@ export const handleParticipantLeftRoom = data => {
     }
 
     const remoteStreams = store.getState().room.remoteStreams
+    const usersRemoteStreams = remoteStreams.filter(rs => rs.connUserSocketId === connUserSocketId)
     const newRemoteStreams = remoteStreams.filter(rs => rs.connUserSocketId !== connUserSocketId)
     store.dispatch(setRemoteStreams(newRemoteStreams))
+
+    const isChosenStreamFromUser = usersRemoteStreams.find(rs => rs === store.getState().room.chosenStream)
+    if (isChosenStreamFromUser) store.dispatch(setChosenStream(null))
 }
 
-// export const switchOutgoingTracks = (stream) => {
-//     for (let socket_id in peers) {
-//         for (let index in peers[socket_id].streams[0].getTracks()) {
-//             for (let index2 in stream.getTracks()) {
-//                 if (
-//                     peers[socket_id].streams[0].getTracks()[index].kind ===
-//                     stream.getTracks()[index2].kind
-//                 ) {
-//                     peers[socket_id].replaceTrack(
-//                         peers[socket_id].streams[0].getTracks()[index],
-//                         stream.getTracks()[index2],
-//                         peers[socket_id].streams[0]
-//                     );
-//                     break;
-//                 }
-//             }
-//         }
-//     }
-// };
+export const switchOutgoingTracks = (stream) => {
+    for (let socket_id in peers) {
+        for (let index in peers[socket_id].streams[0].getTracks()) {
+            for (let index2 in stream.getTracks()) {
+                if (
+                    peers[socket_id].streams[0].getTracks()[index].kind ===
+                    stream.getTracks()[index2].kind
+                ) {
+                    peers[socket_id].replaceTrack(
+                        peers[socket_id].streams[0].getTracks()[index],
+                        stream.getTracks()[index2],
+                        peers[socket_id].streams[0]
+                    );
+                    break;
+                }
+            }
+        }
+    }
+};
 
+export const handleNotepadChange = (sharedNotepadContent) => {
+    store.dispatch(setSharedNotepadContent(sharedNotepadContent))
+}
+export const handleSendMessage = (message) => {
+    store.dispatch(setChatMessages(message))
+}

@@ -1,0 +1,6 @@
+.chatMessagesContainer::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+}
+.chatMessagesContainer {
+    -webkit-overflow-scrolling: touch; /* Lets it scroll lazy */
+  }

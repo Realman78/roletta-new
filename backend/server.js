@@ -12,6 +12,10 @@ app.use(cors())
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
+app.get('/connection', (req,res) => {
+    res.send({connection: 'CONNECTED'})
+})
+
 
 server.listen(PORT, () => {
     console.log(`Server is up and running on port ${PORT}`)

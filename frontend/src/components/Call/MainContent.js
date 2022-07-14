@@ -13,7 +13,7 @@ const MainContainer = styled('div')({
 })
 function MainContent({isChatHidden}) {
   return (
-    <MainContainer style={{width: isChatHidden ? '100%' : '80%'}}>
+    <MainContainer style={{width: isChatHidden ? '99%' : '80%'}}>
         <ContentContainer />
         <FooterContainer />
     </MainContainer>

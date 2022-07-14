@@ -17,7 +17,6 @@ const roomJoinHandler = (socket, data)=>{
     //send info to users in room that they should prepare for incoming connection
     roomDetails.participants.forEach(p => {
         if (p.socketId === participantDetails.socketId) return
-        console.log('kad se joina on emitira: ', participantDetails.socketId, participantDetails.userId)
         socket.to(p.socketId).emit('conn-prepare', {
             connUserSocketId: participantDetails.socketId
         })

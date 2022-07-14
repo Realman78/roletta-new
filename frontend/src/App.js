@@ -1,10 +1,12 @@
 import React from 'react';
 import './App.css';
-import {styled} from '@mui/system'
-import {connect} from 'react-redux'
+import { styled } from '@mui/system'
+import { connect } from 'react-redux'
 import Header from './components/Header';
 import Call from './components/Call';
 import LandingPage from './components/LandingPage';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 
 const Wrapper = styled('div')({
   width: '100%',
@@ -15,16 +17,19 @@ const Wrapper = styled('div')({
   backgroundRepeat: 'no-repeat'
 })
 
-function App({isUserInRoom}) {
+function App({ isUserInRoom }) {
   return (
-    <Wrapper>
-      <Header />
-      {isUserInRoom ? <Call /> : <LandingPage />}
-    </Wrapper>
+    <>
+      <Wrapper>
+        <Header />
+        {isUserInRoom ? <Call /> : <LandingPage />}
+      </Wrapper>
+      <ToastContainer />
+    </>
   );
 }
 
-const mapStoreStateToProps = ({room}) => {
+const mapStoreStateToProps = ({ room }) => {
   return {
     ...room
   }

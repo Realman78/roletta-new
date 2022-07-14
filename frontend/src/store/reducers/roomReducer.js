@@ -7,15 +7,16 @@ const initState = {
     activeRooms: [],
     localStream: null,
     remoteStreams: [],
+    chosenStream: null,
     audioOnly: false,
     screenSharingStream: null,
     isScreenSharingActive: false,
     isUserJoinedWithOnlyAudio: false,
-    isChatHidden: false
+    isChatHidden: false,
 }
 
-const reducer = (state=initState, action)=>{
-    switch(action.type){
+const reducer = (state = initState, action) => {
+    switch (action.type) {
         case roomActions.OPEN_ROOM:
             return {
                 ...state,
@@ -62,6 +63,27 @@ const reducer = (state=initState, action)=>{
             return {
                 ...state,
                 isChatHidden: action.isChatHidden
+            }
+        case roomActions.SET_CHOSEN_STREAM:
+            return {
+                ...state,
+                chosenStream: action.chosenStream
+            }
+        case roomActions.SET_SHARED_NOTEPAD_CONTENT:
+            return {
+                ...state,
+                roomDetails: {
+                    ...state.roomDetails,
+                    sharedNotepadContent: action.sharedNotepadContent
+                }
+            }
+        case roomActions.SET_CHAT_MESSAGES:
+            return {
+                ...state,
+                roomDetails: {
+                    ...state.roomDetails,
+                    chatMessages: action.chatMessages
+                }
             }
         default:
             return state

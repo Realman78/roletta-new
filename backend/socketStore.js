@@ -25,8 +25,9 @@ const removeConnectedUser = socketId=>{
     }
 }
 
+
 //rooms
-const addNewActiveRoom = (userId, socketId, name) => {
+const addNewActiveRoom = (userId, socketId, name, roomName) => {
     const newActiveRoom = {
         roomCreator: {
             userId,
@@ -41,7 +42,10 @@ const addNewActiveRoom = (userId, socketId, name) => {
             }
         ],
         roomId: uuidv4(),
-        roomCode: Math.floor(1000000 + Math.random() * 9999999)
+        roomCode: Math.floor(1000000 + Math.random() * 9999999),
+        roomName,
+        sharedNotepadContent: '',
+        chatMessages: []
     }
     activeRooms = [...activeRooms, newActiveRoom]
     return newActiveRoom
@@ -57,6 +61,40 @@ const getActiveRoom = (id)=>{
     return {
         ...activeRoom
     }
+}
+
+const updateSharedNotepad = ({roomId, sharedNotepadContent}) => {
+    const room = activeRooms.find(room => room.roomId===roomId)
+    activeRooms = activeRooms.filter(r=>r.roomId !== roomId)
+
+    const updatedRoom = {
+        ...room,
+        sharedNotepadContent
+    }
+
+    
+    activeRooms.push(updatedRoom)
+    return updatedRoom
+}
+
+const updateChatMessages = ({roomId, username, userId, textareaContent}) => {
+    const room = activeRooms.find(room => room.roomId===roomId)
+    activeRooms = activeRooms.filter(r=>r.roomId !== roomId)
+    const newChatMessage = {
+        senderName: username,
+        userId,
+        content: textareaContent,
+        id: uuidv4(),
+    }
+
+    const updatedRoom = {
+        ...room,
+        chatMessages: [...room.chatMessages, newChatMessage]
+    }
+
+    
+    activeRooms.push(updatedRoom)
+    return updatedRoom
 }
 
 const joinActiveRoom = (roomId, newParticipant) =>{
@@ -94,5 +132,7 @@ module.exports = {
     getActiveRooms,
     getActiveRoom,
     joinActiveRoom,
-    leaveActiveRoom
+    leaveActiveRoom,
+    updateSharedNotepad,
+    updateChatMessages
 }

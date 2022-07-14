@@ -8,6 +8,8 @@ import { connect } from 'react-redux'
 import { getActions } from '../../store/actions/roomActions'
 import CameraDisableButton from './CameraDisableButton'
 import * as roomHandler from '../../rtc/roomHandler'
+import { toast } from 'react-toastify';
+import { testConnection } from '../../api'
 
 const MainContainer = styled('div')({
     width: '100%',
@@ -38,8 +40,13 @@ const ModalInputArea = styled('div')({
 const Input = styled('input')({
     fontSize: '1.4rem',
     padding: '5px',
-    borderRadius: '8px'
+    borderRadius: '8px',
+    ':focus': {
+        outline: 'none'
+    }
 })
+
+
 
 function ButtonsContainer({ audioOnly, setAudioOnly }) {
     const isMobile = useMediaQuery({ query: '(max-width: 1000px)' });
@@ -75,18 +82,37 @@ function ButtonsContainer({ audioOnly, setAudioOnly }) {
         setAudioOnly(!audioOnly)
     }
 
-    const createNewRoomHandler = () => {
-        roomHandler.createNewRoom(yourName)
+    const createNewRoomHandler = async () => {
+        const connected = await testConnection()
+        if (connected.data?.connection !== 'CONNECTED') {
+            toast.error('Connection to server not established. Reload and try again.')
+            return
+        }
+        if (yourName.trim().length > 0 && roomName.trim().length > 0)
+            roomHandler.createNewRoom(yourName, roomName)
+        else {
+            toast.warn('Please fill in the fields.')
+        }
     }
-    const handleJoinActiveRoom = () => {
-        const found = roomHandler.joinRoom(roomCode, yourName)
-        if (!found) alert('Incorrect code')
+    const handleJoinActiveRoom = async () => {
+        const connected = await testConnection()
+        if (connected.data?.connection !== 'CONNECTED') {
+            toast.error('Connection to server not established. Reload and try again.')
+            return
+        }
+
+        if (yourName.trim().length > 0 && roomCode) {
+            const found = roomHandler.joinRoom(roomCode, yourName)
+            if (!found) toast.error('Room with that code not found.')
+        } else {
+            toast.warn('Please fill in the fields.')
+        }
     }
 
     return (
         <MainContainer style={{ flexDirection: isMobile ? 'column' : 'row' }} className='container'>
-            <div onClick={setShowCreateRoomModal} class="btn"><p>CREATE ROOM</p></div>
-            <div onClick={setShowJoinRoomModal} class="btn"><p>JOIN ROOM</p></div>
+            <div onClick={setShowCreateRoomModal} className="btn"><p>CREATE ROOM</p></div>
+            <div onClick={setShowJoinRoomModal} className="btn"><p>JOIN ROOM</p></div>
 
             <Modal handleClose={toggleShowCreateModal} show={showCreateRoomModal} isCreate>
                 <ModalContent>
@@ -104,7 +130,7 @@ function ButtonsContainer({ audioOnly, setAudioOnly }) {
                     </ModalInputArea>
 
                     <CameraDisableButton audioOnly={audioOnly} handleAudioOnlyChange={handleAudioOnlyChange} />
-                    <button onClick={createNewRoomHandler} style={{ marginTop: '10px' }} class="glow-on-hover" type="button">CREATE A ROOM!</button>
+                    <button onClick={createNewRoomHandler} style={{ marginTop: '30px' }} className="glow-on-hover" type="button">CREATE A ROOM!</button>
                 </ModalContent>
             </Modal>
 
@@ -123,7 +149,7 @@ function ButtonsContainer({ audioOnly, setAudioOnly }) {
                         <Input value={roomCode} onChange={handleRoomCodehange} placeholder='Room code...' />
                     </ModalInputArea>
                     <CameraDisableButton audioOnly={audioOnly} handleAudioOnlyChange={handleAudioOnlyChange} />
-                    <button onClick={handleJoinActiveRoom} style={{ marginTop: '10px' }} class="glow-on-hover" type="button">JOIN A ROOM!</button>
+                    <button onClick={handleJoinActiveRoom} style={{ marginTop: '30px' }} className="glow-on-hover" type="button">JOIN A ROOM!</button>
                 </ModalContent>
             </Modal>
 

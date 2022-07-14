@@ -6,7 +6,6 @@ import ControlsContainer from './ControlsContainer'
 
 const MainContainer = styled('div')({
     display: 'flex',
-    backgroundColor: 'blue',
     width: '100%',
     height: '25%',
     justifyContent: 'center'
@@ -17,7 +16,7 @@ const MainContainer = styled('div')({
 function FooterContainer({localStream, remoteStreams, screenSharingStream}) {
     return (
         <MainContainer>
-            <Video stream={localStream} isLocalStream={true} />
+            <Video stream={screenSharingStream ? screenSharingStream : localStream} isLocalStream={true} />
             <ControlsContainer />
             {remoteStreams.map(rs => <Video key={rs.id} stream={rs} isLocalStream={false} />)}
         </MainContainer>

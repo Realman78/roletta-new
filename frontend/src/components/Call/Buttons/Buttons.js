@@ -4,19 +4,24 @@ import ScreenShareButton from './ScreenShareButton'
 import MicButton from './MicButton'
 import CameraButton from './CameraButton'
 import CloseCallButton from './CloseCallButton'
+import ShowChatButton from './ShowChatButton'
 import { getActions } from '../../../store/actions/roomActions'
-
+import {connect} from 'react-redux'
 const MainContainer = styled('div')({
   width: '100%',
-  height: '100%'
+  height: '50%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'flex-end',
 })
 
 function Buttons(props) {
   return (
     <MainContainer>
-      <ScreenShareButton />
+      <ShowChatButton isChatHidden={props.isChatHidden} setIsChatHidden={props.setIsChatHidden}/>
+      {!props.isUserJoinedWithOnlyAudio && <ScreenShareButton {...props} />}
       <MicButton localStream={props.localStream} />
-      <CameraButton />
+      {!props.isUserJoinedWithOnlyAudio && <CameraButton localStream={props.localStream}/>}
       <CloseCallButton />
     </MainContainer>
   )

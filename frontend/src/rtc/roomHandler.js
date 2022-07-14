@@ -1,13 +1,15 @@
 import store from '../store/store'
-import { setOpenRoom, setRoomDetails, setActiveRooms, setLocalStream, setRemoteStreams, setScreenSharingStream, setIsUserJoinedOnlyWithAudio } from '../store/actions/roomActions'
+import { setOpenRoom, setRoomDetails, setActiveRooms, setLocalStream, setRemoteStreams, setScreenSharingStream, setIsUserJoinedOnlyWithAudio, setChosenStream } from '../store/actions/roomActions'
 import * as socketConnection from './socketConnection'
 import * as webRTCHandler from './webRTCHandler'
+import { setUsername } from '../store/actions/authActions'
 
-export const createNewRoom = (name) => {
+export const createNewRoom = (name, roomName) => {
     const successCallback = () => {
         store.dispatch(setOpenRoom(true, true))
         store.dispatch(setIsUserJoinedOnlyWithAudio(store.getState().room.audioOnly))
-        socketConnection.createNewRoom(name)
+        store.dispatch(setUsername(name))
+        socketConnection.createNewRoom(name, roomName)
     }
     const audioOnly = store.getState().room.audioOnly
     webRTCHandler.getLocalStreamPreview(audioOnly, successCallback)
@@ -26,17 +28,19 @@ export const updateActiveRooms = data => {
     activeRooms.forEach(room => {
         const isRoomCreatedByMe = room.roomCreator.userId === userId
         if (isRoomCreatedByMe) rooms.push({ ...room, creatorUsername: 'Me' })
-        rooms.push({ ...room, creatorUsername: room.username })
+        else rooms.push({ ...room, creatorUsername: room.username })
     });
     store.dispatch(setActiveRooms(rooms))
 }
 export const joinRoom = (roomCode, yourName) => {
-    const {roomId} = store.getState().room.activeRooms.find(r => r.roomCode.toString().trim() === roomCode.toString().trim())
-    if (!roomId) return false
+    const room = store.getState().room.activeRooms.find(r => r.roomCode.toString().trim() === roomCode.toString().trim())
+    if (!room?.roomId) return false
+    const {roomId, roomName, sharedNotepadContent, chatMessages} = room
     const successCallback = () => {
-        store.dispatch(setRoomDetails({ roomId }))
+        store.dispatch(setRoomDetails({ roomId, roomCode, roomName, sharedNotepadContent, chatMessages }))
         store.dispatch(setOpenRoom(false, true))
         store.dispatch(setIsUserJoinedOnlyWithAudio(store.getState().room.audioOnly))
+        store.dispatch(setUsername(yourName))
         socketConnection.joinRoom({ roomId, name: yourName })
     }
     const audioOnly = store.getState().room.audioOnly
@@ -58,6 +62,8 @@ export const leaveRoom = () => {
         screenSharingStream.getTracks().forEach(t => t.stop())
         store.dispatch(setScreenSharingStream(null))
     }
+
+    store.dispatch(setChosenStream(null))
 
     store.dispatch(setRemoteStreams([]))
     webRTCHandler.closeAllConnections()

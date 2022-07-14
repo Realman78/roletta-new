@@ -4,6 +4,9 @@ import * as webRTCHandler from './webRTCHandler'
 let socket = null
 
 export const connectSocket = userId => {
+    if (socket?.connected){
+        return
+    }
     socket = io('http://localhost:5000', {
         auth: {
             uid: userId
@@ -41,11 +44,19 @@ export const connectSocket = userId => {
     socket.on('conn-signal', data => {
         webRTCHandler.handleSignalingData(data)
     })
+    
+    socket.on('notepad-content', data => {
+        webRTCHandler.handleNotepadChange(data)
+    })
 
+    socket.on('send-message', data => {
+        console.log('ok')
+        webRTCHandler.handleSendMessage(data)
+    })
 }
 
-export const createNewRoom = (data) => {
-    socket.emit('room-create', data)
+export const createNewRoom = (name, roomName) => {
+    socket.emit('room-create', {name,roomName})
 }
 
 export const joinRoom = data => {
@@ -58,4 +69,12 @@ export const leaveRoom = data => {
 
 export const signalPeerData = data => {
     socket.emit('conn-signal', data)
+}
+
+export const changeSharedNotepadcontent = data => {
+    socket.emit('notepad-content', data)
+}
+
+export const sendMessage = data => {
+    socket.emit('send-message', data)
 }
