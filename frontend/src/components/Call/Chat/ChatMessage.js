@@ -2,26 +2,33 @@ import React from 'react'
 import { styled } from '@mui/system'
 
 const MainContainer = styled('div')({
-    maxWidth: '90%',
-    minWidth: '40%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    backgroundColor: 'cyan',
-    borderRadius: '8px'
-
+  width: '80%',
+  minWidth: '10%',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  backgroundColor: 'rgb(111,111,230)',
+  color: 'white',
+  borderRadius: '8px',
+  wordBreak: 'break-all',
+  fontSize: '18px',
+  paddingRight: '10px',
+  paddingLeft: '10px',
+  paddingBottom: '10px'
 })
 const HeaderContainer = styled('div')({
   width: '100%',
   display: 'flex',
   alignItems: 'center',
-  marginBottom: '5px'
+  marginBottom: '5px',
+  fontStyle: 'italic',
+  color: 'rgb(230,230,230)'
 })
-function ChatMessage({isMine, content, senderName}) {
+function ChatMessage({ isMine, content, senderName }) {
   return (
-    <MainContainer style={{paddingLeft: isMine ? '0px' : '3px', paddingRight: isMine ? '3px' : '0px', marginLeft: isMine ? '0px' : '3px', marginRight: isMine ? '3px' : '0px', alignItems: isMine ? 'flex-end': 'flex-start'}}>
-      <HeaderContainer style={{justifyContent: isMine ? 'flex-end' : 'flex-start'}}>
+    <MainContainer style={{backgroundColor: isMine ? 'rgb(111,111,230)' : 'gray', marginLeft: isMine ? '0px' : '3px', borderBottomLeftRadius: isMine ? '8px' : '0px',borderBottomRightRadius: !isMine ? '8px' : '0px', }}>
+      <HeaderContainer style={{ justifyContent: isMine ? 'flex-end' : 'flex-start' }}>
         {senderName}
       </HeaderContainer>
       {content}

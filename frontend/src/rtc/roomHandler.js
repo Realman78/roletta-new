@@ -1,5 +1,5 @@
 import store from '../store/store'
-import { setOpenRoom, setRoomDetails, setActiveRooms, setLocalStream, setRemoteStreams, setScreenSharingStream, setIsUserJoinedOnlyWithAudio, setChosenStream } from '../store/actions/roomActions'
+import { setOpenRoom, setRoomDetails, setActiveRooms, setLocalStream, setRemoteStreams, setScreenSharingStream, setIsUserJoinedOnlyWithAudio, setChosenStream, setIsChatHidden } from '../store/actions/roomActions'
 import * as socketConnection from './socketConnection'
 import * as webRTCHandler from './webRTCHandler'
 import { setUsername } from '../store/actions/authActions'
@@ -66,6 +66,7 @@ export const leaveRoom = () => {
     store.dispatch(setChosenStream(null))
 
     store.dispatch(setRemoteStreams([]))
+    store.dispatch(setIsChatHidden(false))
     webRTCHandler.closeAllConnections()
 
     socketConnection.leaveRoom({ roomId })

@@ -18,7 +18,7 @@ const MainContainer = styled('div')({
 function Buttons(props) {
   return (
     <MainContainer>
-      <ShowChatButton isChatHidden={props.isChatHidden} setIsChatHidden={props.setIsChatHidden}/>
+      <ShowChatButton isUnread={props.isUnread} setUnreadMessage={props.setUnreadMessage} isChatHidden={props.isChatHidden} setIsChatHidden={props.setIsChatHidden}/>
       {!props.isUserJoinedWithOnlyAudio && <ScreenShareButton {...props} />}
       <MicButton localStream={props.localStream} />
       {!props.isUserJoinedWithOnlyAudio && <CameraButton localStream={props.localStream}/>}

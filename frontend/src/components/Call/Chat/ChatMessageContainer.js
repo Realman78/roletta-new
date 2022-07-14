@@ -6,7 +6,7 @@ const MainContainer = styled('div')({
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',
-    marginBottom: '10px'
+    marginBottom: '10px',
 })
 
 function ChatMessageContainer({isMine, content, senderName}) {

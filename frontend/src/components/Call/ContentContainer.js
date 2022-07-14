@@ -35,7 +35,7 @@ function ContentContainer({ chosenStream, roomDetails, setSharedNotepadContent }
     }, [roomId, sharedNotepadContent, doUpdate, setDoUpdate])
     return (
         <MainContainer className='container'>
-            {chosenStream ? <Video stream={chosenStream} isLocalStream={true} isChosen={true} autoPlay></Video> : <textarea value={sharedNotepadContent || ''} onChange={textAreaChangeHandler} name="shared" placeholder="This is a shared notepad"></textarea>}
+            {chosenStream ? <Video stream={chosenStream} isLocalStream={true} isChosen={true} autoPlay></Video> : <textarea style={{borderRadius: '8px'}} value={sharedNotepadContent || ''} onChange={textAreaChangeHandler} name="shared" placeholder="This is a shared notepad"></textarea>}
         </MainContainer>
     )
 }

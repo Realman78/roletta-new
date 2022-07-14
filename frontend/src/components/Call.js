@@ -1,7 +1,8 @@
 import { styled } from '@mui/system'
 import MainContent from './Call/MainContent'
 import ChatWrapper from './Call/ChatWrapper'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
+import { useMediaQuery } from 'react-responsive'
 
 const MainContainer = styled('div')({
   width: '100%',
@@ -9,16 +10,18 @@ const MainContainer = styled('div')({
   display: 'flex',
 })
 
-function Call({isChatHidden}) {
+function Call({ isChatHidden }) {
+  const isShort = useMediaQuery({ query: '(max-height: 500px)' })
+
   return (
-    <MainContainer>
+    <MainContainer style={{ height: isShort ? '99%' : '95%' }}>
       <MainContent />
-      {!isChatHidden && <ChatWrapper />}
+      <ChatWrapper isChatHidden={isChatHidden}/>
     </MainContainer>
   )
 }
 
-const mapStoreStateToProps = ({room}) => {
+const mapStoreStateToProps = ({ room }) => {
   return {
     ...room
   }

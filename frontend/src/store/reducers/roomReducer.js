@@ -13,6 +13,7 @@ const initState = {
     isScreenSharingActive: false,
     isUserJoinedWithOnlyAudio: false,
     isChatHidden: false,
+    isUnread: false
 }
 
 const reducer = (state = initState, action) => {
@@ -84,6 +85,11 @@ const reducer = (state = initState, action) => {
                     ...state.roomDetails,
                     chatMessages: action.chatMessages
                 }
+            }
+        case roomActions.SET_UNREAD_MESSAGE:
+            return {
+                ...state,
+                isUnread: action.isUnread
             }
         default:
             return state

@@ -10,7 +10,8 @@ export const roomActions = {
     SET_IS_CHAT_HIDDEN: 'ROOM.SET_IS_CHAT_HIDDEN',
     SET_CHOSEN_STREAM: 'ROOM.SET_CHOSEN_STREAM',
     SET_SHARED_NOTEPAD_CONTENT: 'ROOM.SET_SHARED_NOTEPAD_CONTENT',
-    SET_CHAT_MESSAGES: 'ROOM.SET_CHAT_MESSAGES'
+    SET_CHAT_MESSAGES: 'ROOM.SET_CHAT_MESSAGES',
+    SET_UNREAD_MESSAGE: 'ROOM.SET_UNREAD_MESSAGE'
 }
 
 export const getActions = dispatch => {
@@ -20,6 +21,7 @@ export const getActions = dispatch => {
         setIsChatHidden: isChatHidden => dispatch(setIsChatHidden(isChatHidden)),
         setChosenStream: chosenStream => dispatch(setChosenStream(chosenStream)),
         setSharedNotepadContent: content => dispatch(setSharedNotepadContent(content)),
+        setUnreadMessage: isUnread => dispatch(setUnreadMessage(isUnread)),
     }
 }
 
@@ -103,5 +105,12 @@ export const setChatMessages = chatMessages => {
     return {
         type: roomActions.SET_CHAT_MESSAGES,
         chatMessages
+    }
+}
+
+export const setUnreadMessage = isUnread => {
+    return {
+        type: roomActions.SET_UNREAD_MESSAGE,
+        isUnread
     }
 }

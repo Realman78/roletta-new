@@ -4,13 +4,15 @@ import ChatMessagesContainer from './Chat/ChatMessagesContainer'
 import ChatFooter from './Chat/ChatFooter'
 
 const MainContainer = styled('div')({
-    width: '19%',
+    width: '19.5%',
     height: '99.5%',
     display: 'flex',
-    borderLeft: '1px solid white',
-    borderTop: '1px solid white',
+    // borderLeft: '1px solid white',
+    // borderTop: '1px solid white',
+    borderTopLeftRadius: '8px',
     flexDirection: 'column',
-    position: 'relative'
+    position: 'relative',
+    backgroundColor: 'rgba(80,80,80)'
 })
 
 const TitleContainer = styled('div')({
@@ -25,9 +27,9 @@ const TitleContainer = styled('div')({
     marginBottom: '15px'
 })
 
-function ChatWrapper() {
+function ChatWrapper({isChatHidden}) {
     return (
-        <MainContainer>
+        <MainContainer style={{display: isChatHidden ? 'none': 'flex'}}>
             <TitleContainer>
                 CHAT
             </TitleContainer>
