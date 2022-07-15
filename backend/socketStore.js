@@ -87,9 +87,25 @@ const updateChatMessages = ({roomId, username, userId, textareaContent}) => {
         id: uuidv4(),
     }
 
+    if (!room) return null
+
     const updatedRoom = {
         ...room,
         chatMessages: [...room.chatMessages, newChatMessage]
+    }
+
+    
+    activeRooms.push(updatedRoom)
+    return updatedRoom
+}
+const deleteChatMessage = ({roomId,messageId}) => {
+    const room = activeRooms.find(room => room.roomId===roomId)
+    activeRooms = activeRooms.filter(r=>r.roomId !== roomId)
+    const newChatMessages = room.chatMessages.filter((message)=>message.id !== messageId)
+
+    const updatedRoom = {
+        ...room,
+        chatMessages: newChatMessages
     }
 
     
@@ -134,5 +150,6 @@ module.exports = {
     joinActiveRoom,
     leaveActiveRoom,
     updateSharedNotepad,
-    updateChatMessages
+    updateChatMessages,
+    deleteChatMessage
 }

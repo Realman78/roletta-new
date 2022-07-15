@@ -24,7 +24,7 @@ function App({ isUserInRoom }) {
         <Header />
         {isUserInRoom ? <Call /> : <LandingPage />}
       </Wrapper>
-      <ToastContainer />
+      <ToastContainer pauseOnFocusLoss={false}/>
     </>
   );
 }

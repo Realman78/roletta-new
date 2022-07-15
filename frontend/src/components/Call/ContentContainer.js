@@ -5,10 +5,12 @@ import './ContentContainer.css'
 import Video from './Video'
 import * as socketConnection from '../../rtc/socketConnection'
 import { getActions } from '../../store/actions/roomActions'
+import CodeEditor from './CodeEditor'
 
 const MainContainer = styled('div')({
     width: '100%',
     height: '75%',
+    overflowY: 'scroll'
 })
 
 
@@ -24,7 +26,7 @@ function ContentContainer({ chosenStream, roomDetails, setSharedNotepadContent }
     }
     useEffect(() => {
         const delay = setTimeout(() => {
-            if (roomId && doUpdate){
+            if (roomId && doUpdate) {
                 socketConnection.changeSharedNotepadcontent({ roomId, sharedNotepadContent })
                 setDoUpdate(false)
             }
@@ -35,7 +37,7 @@ function ContentContainer({ chosenStream, roomDetails, setSharedNotepadContent }
     }, [roomId, sharedNotepadContent, doUpdate, setDoUpdate])
     return (
         <MainContainer className='container'>
-            {chosenStream ? <Video stream={chosenStream} isLocalStream={true} isChosen={true} autoPlay></Video> : <textarea style={{borderRadius: '8px'}} value={sharedNotepadContent || ''} onChange={textAreaChangeHandler} name="shared" placeholder="This is a shared notepad"></textarea>}
+            {chosenStream ? <Video stream={chosenStream} isLocalStream={true} isChosen={true} autoPlay></Video> : <CodeEditor code={sharedNotepadContent || ''} changeHandler={textAreaChangeHandler} />}
         </MainContainer>
     )
 }

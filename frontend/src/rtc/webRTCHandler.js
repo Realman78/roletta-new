@@ -1,5 +1,5 @@
 import store from '../store/store'
-import { setChatMessages, setChosenStream, setLocalStream, setRemoteStreams, setSharedNotepadContent } from '../store/actions/roomActions'
+import { setChatMessages, setChosenStream, setLocalStream, setRemoteStreams, setRoomDetails, setSharedNotepadContent } from '../store/actions/roomActions'
 import Peer from 'simple-peer'
 import * as socketConnection from './socketConnection'
 
@@ -89,6 +89,7 @@ export const prepareNewPeerConnection = (connUserSocketId, isInitiator) => {
         console.log('Remote stream came 💦')
         remoteStream.connUserSocketId = connUserSocketId
         addNewRemoteStream(remoteStream)
+        socketConnection.getRoomDetails(store.getState().room.roomDetails.roomId)
     })
 }
 
@@ -127,6 +128,7 @@ export const handleParticipantLeftRoom = data => {
     const usersRemoteStreams = remoteStreams.filter(rs => rs.connUserSocketId === connUserSocketId)
     const newRemoteStreams = remoteStreams.filter(rs => rs.connUserSocketId !== connUserSocketId)
     store.dispatch(setRemoteStreams(newRemoteStreams))
+    socketConnection.getRoomDetails(store.getState().room.roomDetails.roomId)
 
     const isChosenStreamFromUser = usersRemoteStreams.find(rs => rs === store.getState().room.chosenStream)
     if (isChosenStreamFromUser) store.dispatch(setChosenStream(null))
@@ -157,4 +159,7 @@ export const handleNotepadChange = (sharedNotepadContent) => {
 }
 export const handleSendMessage = (message) => {
     store.dispatch(setChatMessages(message))
+}
+export const handleRoomUpdate = (room) => {
+    store.dispatch(setRoomDetails(room))
 }

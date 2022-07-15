@@ -11,6 +11,9 @@ const roomInitializeConnectionHandler = require('./socketHandlers/roomInitialize
 const roomSignalingDataHandler = require('./socketHandlers/roomSignalingDataHandler')
 const notepadChangeHandler = require('./socketHandlers/notepadChangeHandler')
 const sendMessageHandler = require('./socketHandlers/sendMessageHandler')
+const getRoomDetailsHandler = require('./socketHandlers/getRoomDetailsHandler')
+const deleteMessageHandler = require('./socketHandlers/deleteMessageHandler')
+
 
 const registerSocketServer = server => {
     const io = require('socket.io')(server, {
@@ -48,6 +51,12 @@ const registerSocketServer = server => {
         })
         socket.on('send-message', data => {
             sendMessageHandler(socket, data, io)
+        })
+        socket.on('delete-message', data => {
+            deleteMessageHandler(socket, data, io)
+        })
+        socket.on('get-room-details', data => {
+            getRoomDetailsHandler(io, data)
         })
 
         socket.on('disconnect', () => {

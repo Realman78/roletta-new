@@ -35,13 +35,19 @@ export const updateActiveRooms = data => {
 export const joinRoom = (roomCode, yourName) => {
     const room = store.getState().room.activeRooms.find(r => r.roomCode.toString().trim() === roomCode.toString().trim())
     if (!room?.roomId) return false
-    const {roomId, roomName, sharedNotepadContent, chatMessages} = room
+    const { roomId, roomName, sharedNotepadContent, chatMessages, participants } = room
     const successCallback = () => {
-        store.dispatch(setRoomDetails({ roomId, roomCode, roomName, sharedNotepadContent, chatMessages }))
+        store.dispatch(setRoomDetails({ roomId, roomCode, roomName, sharedNotepadContent, chatMessages, participants }))
         store.dispatch(setOpenRoom(false, true))
         store.dispatch(setIsUserJoinedOnlyWithAudio(store.getState().room.audioOnly))
         store.dispatch(setUsername(yourName))
         socketConnection.joinRoom({ roomId, name: yourName })
+        socketConnection.sendMessage({
+            username: 'System',
+            userId: 1308,
+            textareaContent: `${yourName} joined the room!`,
+            roomId
+        })
     }
     const audioOnly = store.getState().room.audioOnly
     webRTCHandler.getLocalStreamPreview(audioOnly, successCallback)
@@ -49,6 +55,7 @@ export const joinRoom = (roomCode, yourName) => {
 }
 
 export const leaveRoom = () => {
+    if (window.confirm("Are you sure you want to leave the room?") == false) return 
     const roomId = store.getState().room.roomDetails.roomId
 
     const localStream = store.getState().room.localStream
@@ -72,4 +79,10 @@ export const leaveRoom = () => {
     socketConnection.leaveRoom({ roomId })
     store.dispatch(setRoomDetails(null))
     store.dispatch(setOpenRoom(false, false))
+    socketConnection.sendMessage({
+        username: 'System',
+        userId: 1308,
+        textareaContent: `${store.getState().auth.username} left the room.`,
+        roomId
+    })
 }

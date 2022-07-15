@@ -3,7 +3,6 @@ const roomUpdates = require('../socketHandlers/updates/rooms')
 
 const roomJoinHandler = (socket, data)=>{
     const {roomId, name} = data
-    console.log(data)
 
     const participantDetails = {
         userId: socket.user,

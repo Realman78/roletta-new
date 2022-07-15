@@ -13,19 +13,23 @@ const MainContainer = styled('div')({
 
 
 
-function FooterContainer({localStream, remoteStreams, screenSharingStream}) {
+function FooterContainer({ localStream, remoteStreams, screenSharingStream, roomDetails, username }) {
     return (
         <MainContainer>
-            <Video stream={screenSharingStream ? screenSharingStream : localStream} isLocalStream={true} />
+            <Video amountOfParticipants={roomDetails?.participants?.length} owner={username} stream={screenSharingStream ? screenSharingStream : localStream} isLocalStream={true} />
             <ControlsContainer />
-            {remoteStreams.map(rs => <Video key={rs.id} stream={rs} isLocalStream={false} />)}
+            {remoteStreams.map((rs, i) => {
+                const user = roomDetails?.participants.find(p => p.socketId === rs.connUserSocketId)
+                return <Video amountOfParticipants={roomDetails?.participants?.length} owner={user?.name} key={rs.id} stream={rs} isLocalStream={false} />
+            })}
         </MainContainer>
     )
 }
 
-const mapStoreStateToProps = ({room}) => {
+const mapStoreStateToProps = ({ room, auth }) => {
     return {
-        ...room
+        ...room,
+        ...auth
     }
 }
 

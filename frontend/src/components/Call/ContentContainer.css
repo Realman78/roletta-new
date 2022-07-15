@@ -2,7 +2,21 @@
 .container video{
     width: 100%;
     height: 99%;
-    padding-left: 0.5%;
-    background: #eeeeee;
+    background: #151515;
     resize: none;
+}
+.container::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+}
+.container {
+    -webkit-overflow-scrolling: touch; /* Lets it scroll lazy */
+}
+
+.selectLanguage {
+    min-height: 50px;
+}
+.selectFont {
+    width: 40%;
+    font-size: 16px;
+    margin-left: 5px;
 }

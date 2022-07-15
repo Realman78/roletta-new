@@ -50,8 +50,11 @@ export const connectSocket = userId => {
     })
 
     socket.on('send-message', data => {
-        console.log('ok')
         webRTCHandler.handleSendMessage(data)
+    })
+
+    socket.on('get-room-details', data => {
+        webRTCHandler.handleRoomUpdate(data)
     })
 }
 
@@ -77,4 +80,12 @@ export const changeSharedNotepadcontent = data => {
 
 export const sendMessage = data => {
     socket.emit('send-message', data)
+}
+
+export const deleteMessage = data => {
+    socket.emit('delete-message', data)
+}
+
+export const getRoomDetails = data => {
+    socket.emit('get-room-details', data)
 }

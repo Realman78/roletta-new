@@ -85,7 +85,7 @@ function ButtonsContainer({ audioOnly, setAudioOnly }) {
     const createNewRoomHandler = async () => {
         const connected = await testConnection()
         if (connected.data?.connection !== 'CONNECTED') {
-            toast.error('Connection to server not established. Reload and try again.')
+            toast.error('Connection to server not established. Reload and try again.', {autoClose: 3000})
             return
         }
         if (yourName.trim().length > 0 && roomName.trim().length > 0)
@@ -97,15 +97,15 @@ function ButtonsContainer({ audioOnly, setAudioOnly }) {
     const handleJoinActiveRoom = async () => {
         const connected = await testConnection()
         if (connected.data?.connection !== 'CONNECTED') {
-            toast.error('Connection to server not established. Reload and try again.')
+            toast.error('Connection to server not established. Reload and try again.', {autoClose: 3000})
             return
         }
 
         if (yourName.trim().length > 0 && roomCode) {
             const found = roomHandler.joinRoom(roomCode, yourName)
-            if (!found) toast.error('Room with that code not found.')
+            if (!found) toast.error('Room with that code not found.', {autoClose: 3000})
         } else {
-            toast.warn('Please fill in the fields.')
+            toast.warn('Please fill in the fields.', {autoClose: 3000})
         }
     }
 

@@ -20,10 +20,10 @@ function ChatMessagesContainer({roomDetails, userId, isChatHidden, setUnreadMess
   useEffect(()=>{
     mainContainer.current.scrollTop = mainContainer.current.scrollHeight;
     if (isChatHidden) setUnreadMessage(true)
-  }, [mainContainer, chatMessages])
+  }, [mainContainer, chatMessages, setUnreadMessage])
   return (
     <MainContainer ref={mainContainer} className='chatMessagesContainer'>
-      {roomDetails?.chatMessages.map(message => <ChatMessageContainer key={message.id} id={message.id} isMine={message.userId === userId} content={message.content} senderName={message.senderName}/>)}
+      {roomDetails?.chatMessages.map(message => <ChatMessageContainer key={message.id} roomId={roomDetails?.roomId} id={message.id} userId={message.userId} isMine={message.userId === userId} content={message.content} senderName={message.senderName}/>)}
     </MainContainer>
   )
 }
