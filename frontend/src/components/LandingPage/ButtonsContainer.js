@@ -49,7 +49,7 @@ const Input = styled('input')({
 
 
 function ButtonsContainer({ audioOnly, setAudioOnly }) {
-    const isMobile = useMediaQuery({ query: '(max-width: 1000px)' });
+    const isMobile = useMediaQuery({ query: '(max-width: 1100px)' });
     const [showCreateRoomModal, setShowCreateRoomModal] = useState(false)
     const [showJoinRoomModal, setShowJoinRoomModal] = useState(false)
 

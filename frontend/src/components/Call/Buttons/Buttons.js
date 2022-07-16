@@ -9,10 +9,11 @@ import { getActions } from '../../../store/actions/roomActions'
 import {connect} from 'react-redux'
 const MainContainer = styled('div')({
   width: '100%',
-  height: '50%',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'flex-end',
+  position: 'absolute',
+  bottom: 0
 })
 
 function Buttons(props) {

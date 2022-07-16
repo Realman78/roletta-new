@@ -3,6 +3,7 @@ import MainContent from './Call/MainContent'
 import ChatWrapper from './Call/ChatWrapper'
 import { connect } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
+import { useEffect } from 'react'
 
 const MainContainer = styled('div')({
   width: '100%',
@@ -13,6 +14,17 @@ const MainContainer = styled('div')({
 function Call({ isChatHidden }) {
   const isShort = useMediaQuery({ query: '(max-height: 650px)' })
 
+  useEffect(() => {
+    window.addEventListener("beforeunload", alertUser);
+    return () => {
+      window.removeEventListener("beforeunload", alertUser);
+    };
+  }, []);
+
+  const alertUser = (e) => {
+    e.preventDefault();
+    e.returnValue = "";
+  };
   return (
     <MainContainer style={{ height: isShort ? '99%' : '95%' }}>
       <MainContent />
