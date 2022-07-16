@@ -50,7 +50,7 @@ const registerSocketServer = server => {
             notepadChangeHandler(socket, data)
         })
         socket.on('send-message', data => {
-            sendMessageHandler(socket, data, io)
+            sendMessageHandler(io, data)
         })
         socket.on('delete-message', data => {
             deleteMessageHandler(socket, data, io)

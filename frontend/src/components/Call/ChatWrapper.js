@@ -2,6 +2,7 @@ import React from 'react'
 import { styled } from '@mui/system'
 import ChatMessagesContainer from './Chat/ChatMessagesContainer'
 import ChatFooter from './Chat/ChatFooter'
+import { useMediaQuery } from 'react-responsive'
 
 const MainContainer = styled('div')({
     width: '19.5%',
@@ -11,7 +12,6 @@ const MainContainer = styled('div')({
     // borderTop: '1px solid white',
     borderTopLeftRadius: '8px',
     flexDirection: 'column',
-    position: 'relative',
     backgroundColor: 'rgba(80,80,80)'
 })
 
@@ -28,11 +28,13 @@ const TitleContainer = styled('div')({
 })
 
 function ChatWrapper({isChatHidden}) {
+    const isShort = useMediaQuery({ query: '(max-height: 500px)' })
+
     return (
         <MainContainer style={{display: isChatHidden ? 'none': 'flex'}}>
-            <TitleContainer>
+            {!isShort && <TitleContainer>
                 CHAT
-            </TitleContainer>
+            </TitleContainer>}
             <ChatMessagesContainer />
             <ChatFooter />
         </MainContainer>

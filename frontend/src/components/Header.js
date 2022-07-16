@@ -21,7 +21,7 @@ const HeaderWrapper = styled('div')({
 
 function Header({ isUserInRoom, roomDetails }) {
     const isMobile = useMediaQuery({ query: '(max-width: 1000px)' })
-    const isShort = useMediaQuery({ query: '(max-height: 500px)' })
+    const isShort = useMediaQuery({ query: '(max-height: 650px)' })
     const [copying, setCopying] = useState(false)
 
     const handleLeaveRoom = () => {

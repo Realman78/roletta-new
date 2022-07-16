@@ -1,7 +1,7 @@
 const serverStore = require('../socketStore')
 const roomUpdates = require('./updates/rooms.js')
 
-const sendMessageHandler = async (socket, data, io) => {
+const sendMessageHandler = async (io, data) => {
     const room = serverStore.updateChatMessages(data)
 
     if (room && room.participants){

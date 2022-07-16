@@ -8,7 +8,7 @@ import { getActions } from '../../../store/actions/roomActions'
 
 const MainContainer = styled('div')({
   width: '100%',
-  maxHeight: '88%',
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   overflowY: 'scroll'

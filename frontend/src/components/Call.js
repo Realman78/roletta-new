@@ -11,12 +11,12 @@ const MainContainer = styled('div')({
 })
 
 function Call({ isChatHidden }) {
-  const isShort = useMediaQuery({ query: '(max-height: 500px)' })
+  const isShort = useMediaQuery({ query: '(max-height: 650px)' })
 
   return (
     <MainContainer style={{ height: isShort ? '99%' : '95%' }}>
       <MainContent />
-      <ChatWrapper isChatHidden={isChatHidden}/>
+      <ChatWrapper isChatHidden={isChatHidden} />
     </MainContainer>
   )
 }

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { styled } from '@mui/system'
 import Select from 'react-select'
 import { getActionsCode } from '../../store/actions/codeActions'
+import { useMediaQuery } from 'react-responsive'
 
 const options = [
   { value: 'c', label: 'C' },
@@ -42,7 +43,7 @@ const MainContainer = styled('div')({
   alignItems: 'center',
   flexDirection: 'column',
   backgroundColor: 'rgb(80,80,80)',
-  justifyContent: 'space-evenly',
+  justifyContent: 'center',
   borderRadius: '12px',
   borderTopRightRadius: '0px',
   position: 'relative'
@@ -58,7 +59,7 @@ const FontChooseWrapper = styled('div')({
   alignItems: 'center'
 })
 const SettingsTitle = styled('p')({
-  fontSize: '24px',
+  fontSize: '16px',
   color: 'white',
   top: '0px',
   position: 'absolute',
@@ -69,6 +70,8 @@ const SettingsTitle = styled('p')({
 
 
 function EditorSettings({ setLanguage, language, fontSize, setFontSize }) {
+  const isShort = useMediaQuery({ query: '(max-height: 900px)' })
+
   const { label } = options.find(opt => opt.value === language)
   const handleLanguageChanged = (e) => {
     setLanguage(e.value)
@@ -79,15 +82,15 @@ function EditorSettings({ setLanguage, language, fontSize, setFontSize }) {
 
   return (
     <MainContainer>
-      <SettingsTitle>
+      {!isShort && <SettingsTitle>
         Editor Settings
-      </SettingsTitle>
+      </SettingsTitle>}
       <SelectWrapper>
-        <p style={{color: 'white'}}>Select language:</p>
+        <p style={{ color: 'white' }}>Select language:</p>
         <Select onChange={handleLanguageChanged} placeholder={label} className='selectLanguage' options={options} />
       </SelectWrapper>
       <FontChooseWrapper>
-        <p style={{color: 'white'}}>Input font size:</p>
+        <p style={{ color: 'white' }}>Font size:</p>
         <Select onChange={handleFontSizeChanged} placeholder={fontSize} className='selectFont' options={optionsFont} />
       </FontChooseWrapper>
     </MainContainer>
