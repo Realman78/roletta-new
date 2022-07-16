@@ -3,6 +3,7 @@ import ScreenShareIcon from '@mui/icons-material/ScreenShare'
 import StopScreenShareIcon from '@mui/icons-material/StopScreenShare'
 import * as webRTCHelper from '../../../rtc/webRTCHandler'
 import './Buttons.css'
+import { Tooltip } from '@mui/material'
 
 const constraints = {
   audio: false,
@@ -30,9 +31,11 @@ function ScreenShareButton({ localStream, screenSharingStream, setScreenSharingS
     }
   }
   return (
-    <IconButton onClick={handleToggleScreenShare} style={{ color: isScreenSharingActive ? 'blue' : 'white' }}>
-      {!isScreenSharingActive ? <ScreenShareIcon className='controlButton'/> : <StopScreenShareIcon className='controlButton'/>}
-    </IconButton>
+    <Tooltip title={isScreenSharingActive ? 'Stop Sharing Screen' : 'Share Screen'}>
+      <IconButton onClick={handleToggleScreenShare} style={{ color: isScreenSharingActive ? 'blue' : 'white' }}>
+        {!isScreenSharingActive ? <ScreenShareIcon className='controlButton' /> : <StopScreenShareIcon className='controlButton' />}
+      </IconButton>
+    </Tooltip>
   )
 }
 

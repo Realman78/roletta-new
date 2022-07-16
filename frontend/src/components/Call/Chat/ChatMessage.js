@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { styled } from '@mui/system'
-import { IconButton } from '@mui/material'
+import { IconButton, Tooltip } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import * as socketConnection from '../../../rtc/socketConnection'
 
@@ -42,12 +42,14 @@ function ChatMessage({ isMine, content, senderName, id, roomId }) {
   return (
     <MainContainer onMouseEnter={() => setShowBin(true)} onMouseLeave={() => setShowBin(false)} style={{ backgroundColor: isMine ? 'rgb(111,111,230)' : 'gray', marginLeft: isMine ? '0px' : '3px', borderBottomLeftRadius: isMine ? '8px' : '0px', borderBottomRightRadius: !isMine ? '8px' : '0px', }}>
       <HeaderContainer style={hs}>
-        <IconButton onClick={deleteMessagehandler} style={{ color: 'red', display: (showBin && isMine) ? 'block' : 'none', padding: 0, margin: 0 }}>
-          <DeleteIcon />
-        </IconButton>
+        <Tooltip title={'Delete message'} placement={'right'}>
+          <IconButton onClick={deleteMessagehandler} style={{ color: 'red', display: (showBin && isMine) ? 'block' : 'none', padding: 0, margin: 0 }}>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
         {senderName}
       </HeaderContainer>
-      {content.split('\n').map((item, key) =><span key={key}>{item}<br /></span>)}
+      {content.split('\n').map((item, key) => <span key={key}>{item}<br /></span>)}
     </MainContainer>
   )
 }

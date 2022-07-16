@@ -3,6 +3,7 @@ import IconButton from '@mui/material/IconButton'
 import VideocamIcon from '@mui/icons-material/Videocam'
 import VideocamOffIcon from '@mui/icons-material/VideocamOff'
 import './Buttons.css'
+import { Tooltip } from '@mui/material'
 
 
 function CameraButton({ localStream }) {
@@ -12,9 +13,11 @@ function CameraButton({ localStream }) {
     setCameraEnabled(!cameraEnabled)
   }
   return (
-    <IconButton onClick={handleToggleCamera} style={{ color: cameraEnabled ? 'white' : 'red'}}>
-      {cameraEnabled ? <VideocamIcon className='controlButton'/> : <VideocamOffIcon className='controlButton'/>}
-    </IconButton>
+    <Tooltip title={cameraEnabled ? 'Disable Camera' : 'Enable Camera'}>
+      <IconButton onClick={handleToggleCamera} style={{ color: cameraEnabled ? 'white' : 'red' }}>
+        {cameraEnabled ? <VideocamIcon className='controlButton' /> : <VideocamOffIcon className='controlButton' />}
+      </IconButton>
+    </Tooltip>
   )
 }
 

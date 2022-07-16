@@ -3,15 +3,18 @@ import IconButton from '@mui/material/IconButton'
 import PhoneDisabledIcon from '@mui/icons-material/PhoneDisabled'
 import * as roomHandler from '../../../rtc/roomHandler'
 import './Buttons.css'
+import { Tooltip } from '@mui/material'
 
 function CloseCallButton() {
   const handleLeaveRoom = () => {
-    roomHandler.leaveRoom()
+    roomHandler.leaveRoom(true)
   }
   return (
-    <IconButton  onClick={handleLeaveRoom} style={{color:'white'}}>
-        <PhoneDisabledIcon className='closeCallButton'/>
-    </IconButton>
+    <Tooltip title={'Hang Up'}>
+      <IconButton onClick={handleLeaveRoom} style={{ color: 'white' }}>
+        <PhoneDisabledIcon className='closeCallButton' />
+      </IconButton>
+    </Tooltip>
   )
 }
 

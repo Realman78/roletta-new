@@ -2,7 +2,8 @@ import IconButton from '@mui/material/IconButton'
 import CommentIcon from '@mui/icons-material/Comment'
 import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled'
 import './Buttons.css'
-import {styled} from '@mui/system'
+import { styled } from '@mui/system'
+import { Tooltip } from '@mui/material'
 
 const Notification = styled('button')({
     position: 'absolute',
@@ -25,10 +26,12 @@ function ScreenShareButton({ setUnreadMessage, isUnread, isChatHidden, setIsChat
             setUnreadMessage(false)
     }
     return (
-        <IconButton onClick={handleToggleChat} style={{ color:  'white', position: 'relative' }}>
-            {isChatHidden ? <CommentIcon className='controlButton' /> : <CommentsDisabledIcon className='controlButton' />}
-            {(isUnread && isChatHidden) && <Notification/>}
-        </IconButton>
+        <Tooltip title={isChatHidden ? 'Show Chat' : 'Hide Chat'}>
+            <IconButton onClick={handleToggleChat} style={{ color: 'white', position: 'relative' }}>
+                {isChatHidden ? <CommentIcon className='controlButton' /> : <CommentsDisabledIcon className='controlButton' />}
+                {(isUnread && isChatHidden) && <Notification />}
+            </IconButton>
+        </Tooltip>
     )
 }
 

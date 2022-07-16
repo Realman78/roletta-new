@@ -12,6 +12,7 @@ const options = [
   { value: 'go', label: 'GO' },
   { value: 'java', label: 'Java' },
   { value: 'js', label: 'JavaScript' },
+  { value: 'jsx', label: 'JSX' },
   { value: 'kt', label: 'Kotlin' },
   { value: 'py', label: 'Python' },
   { value: 'php', label: 'PHP' },
@@ -51,7 +52,11 @@ const MainContainer = styled('div')({
 
 const SelectWrapper = styled('div')({
   overflowY: 'visible',
-  width: '75%'
+  width: '75%',
+  display: 'flex',
+  alignItems: 'flex-start',
+  justifyContent: 'center',
+  flexDirection: 'column'
 })
 const FontChooseWrapper = styled('div')({
   width: '75%',
@@ -70,7 +75,7 @@ const SettingsTitle = styled('p')({
 
 
 function EditorSettings({ setLanguage, language, fontSize, setFontSize }) {
-  const isShort = useMediaQuery({ query: '(max-height: 900px)' })
+  const isShort = useMediaQuery({ query: '(max-height: 650px)' })
 
   const { label } = options.find(opt => opt.value === language)
   const handleLanguageChanged = (e) => {
@@ -87,11 +92,11 @@ function EditorSettings({ setLanguage, language, fontSize, setFontSize }) {
       </SettingsTitle>}
       <SelectWrapper>
         <p style={{ color: 'white' }}>Select language:</p>
-        <Select onChange={handleLanguageChanged} placeholder={label} className='selectLanguage' options={options} />
+        <Select menuPlacement='top' onChange={handleLanguageChanged} placeholder={label} className='selectLanguage' options={options} />
       </SelectWrapper>
       <FontChooseWrapper>
         <p style={{ color: 'white' }}>Font size:</p>
-        <Select onChange={handleFontSizeChanged} placeholder={fontSize} className='selectFont' options={optionsFont} />
+        <Select menuPlacement='top' onChange={handleFontSizeChanged} placeholder={fontSize} className='selectFont' options={optionsFont} />
       </FontChooseWrapper>
     </MainContainer>
   )

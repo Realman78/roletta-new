@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { styled } from '@mui/system'
 import Buttons from './Buttons/Buttons'
 import { connect } from 'react-redux'
-import { Typography } from '@mui/material'
+import { Tooltip, Typography } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import NoteIcon from '@mui/icons-material/Note';
 import SettingsIcon from '@mui/icons-material/Settings'
@@ -59,22 +59,30 @@ function ControlsContainer({ roomDetails, chosenStream, setChosenStream, showEdi
   return (
     <MainContainer style={{ width: roomDetails?.participants?.length > 3 ? '20%' : '30%' }}>
       {chosenStream ? <ControlButtonWrapper>
-        <IconButton onClick={handleShowNotepad} style={{ color: 'white' }}>
-          <NoteIcon />
-        </IconButton>
+        <Tooltip placement={'top'} title={'Show Code Editor'}>
+          <IconButton onClick={handleShowNotepad} style={{ color: 'white' }}>
+            <NoteIcon />
+          </IconButton>
+        </Tooltip>
       </ControlButtonWrapper> : <ControlButtonWrapper>
-        <IconButton onClick={handleShowEditorSettings} style={{ zIndex: 2000, color: showEditorSettings ? 'red' : 'white' }}>
-          {showEditorSettings ? <CloseIcon className='closeCallButton' /> : <SettingsIcon className='controlButton' />}
-        </IconButton>
+        <Tooltip placement={'top'} title={showEditorSettings ? 'Close Code Editor Settings' : 'Show Code Editor Settings'}>
+          <IconButton onClick={handleShowEditorSettings} style={{ zIndex: 2000, color: showEditorSettings ? 'red' : 'white' }}>
+            {showEditorSettings ? <CloseIcon className='closeCallButton' /> : <SettingsIcon className='controlButton' />}
+          </IconButton>
+        </Tooltip>
       </ControlButtonWrapper>}
       {(showEditorSettings && !chosenStream) ? <EditorSettings /> : <>
         <TitleContainer>
-          <Typography sx={{ margin: '0px', marginTop: '20px', fontSize: '20px', color: 'white', fontWeight: 'bold' }}>
-            {roomDetails?.roomName}
-          </Typography>
-          <Typography onClick={handleCopyCode} sx={{ cursor: 'pointer', margin: '0px', marginTop: '10px', fontSize: '20px', color: copying ? 'lightblue' : 'white', fontWeight: 'bold' }}>
-            Code: {roomDetails?.roomCode}
-          </Typography>
+          <Tooltip title={'Room Name'} placement={'top'}>
+            <Typography sx={{ margin: '0px', marginTop: '20px', fontSize: '20px', color: 'white', fontWeight: 'bold' }}>
+              {roomDetails?.roomName}
+            </Typography>
+          </Tooltip>
+          <Tooltip title={copying ? '✔ Copied Room Code!' : 'Copy Room Code'} placement={'right-end'}>
+            <Typography onClick={handleCopyCode} sx={{ cursor: 'pointer', margin: '0px', marginTop: '10px', fontSize: '20px', color: copying ? 'lightblue' : 'white', fontWeight: 'bold' }}>
+              Code: {roomDetails?.roomCode}
+            </Typography>
+          </Tooltip>
         </TitleContainer>
         <Buttons />
       </>}

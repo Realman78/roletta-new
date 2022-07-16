@@ -26,7 +26,7 @@ function Header({ isUserInRoom, roomDetails }) {
 
     const handleLeaveRoom = () => {
         if (isUserInRoom)
-            roomHandler.leaveRoom()
+            roomHandler.leaveRoom(false)
     }
 
     const handleCopyCode = () => {

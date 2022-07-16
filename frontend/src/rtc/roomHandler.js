@@ -3,6 +3,7 @@ import { setOpenRoom, setRoomDetails, setActiveRooms, setLocalStream, setRemoteS
 import * as socketConnection from './socketConnection'
 import * as webRTCHandler from './webRTCHandler'
 import { setUsername } from '../store/actions/authActions'
+import { toast } from 'react-toastify'
 
 export const createNewRoom = (name, roomName) => {
     const successCallback = () => {
@@ -35,6 +36,7 @@ export const updateActiveRooms = data => {
 export const joinRoom = (roomCode, yourName) => {
     const room = store.getState().room.activeRooms.find(r => r.roomCode.toString().trim() === roomCode.toString().trim())
     if (!room?.roomId) return false
+    if (room.participants.length > 3) return toast.error('Maximum number of participants in room (4) is reached.')
     const { roomId, roomName, sharedNotepadContent, chatMessages, participants } = room
     const successCallback = () => {
         store.dispatch(setRoomDetails({ roomId, roomCode, roomName, sharedNotepadContent, chatMessages, participants }))
@@ -54,8 +56,8 @@ export const joinRoom = (roomCode, yourName) => {
     return true
 }
 
-export const leaveRoom = () => {
-    if (window.confirm("Are you sure you want to leave the room?") == false) return 
+export const leaveRoom = (forced) => {
+    if (!forced && window.confirm("Are you sure you want to leave the room?") === false) return 
     const roomId = store.getState().room.roomDetails.roomId
 
     const localStream = store.getState().room.localStream

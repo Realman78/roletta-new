@@ -3,8 +3,9 @@ import IconButton from '@mui/material/IconButton'
 import MicIcon from '@mui/icons-material/Mic'
 import MicOffIcon from '@mui/icons-material/MicOff'
 import './Buttons.css'
+import { Tooltip } from '@mui/material'
 
-function MicButton({localStream}) {
+function MicButton({ localStream }) {
   const [micEnabled, setMicEnabled] = useState(true)
 
   const handleToggleMic = () => {
@@ -13,9 +14,11 @@ function MicButton({localStream}) {
   }
 
   return (
-    <IconButton onClick={handleToggleMic} style={{color:micEnabled ? 'white' : 'red'}}>
-        {micEnabled ? <MicIcon className='controlButton'/> : <MicOffIcon className='controlButton'/>}
-    </IconButton>
+    <Tooltip title={micEnabled ? 'Mute' : 'Unmute'}>
+      <IconButton onClick={handleToggleMic} style={{ color: micEnabled ? 'white' : 'red' }}>
+        {micEnabled ? <MicIcon className='controlButton' /> : <MicOffIcon className='controlButton' />}
+      </IconButton>
+    </Tooltip>
   )
 }
 

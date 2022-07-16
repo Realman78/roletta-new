@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Editor from '@uiw/react-textarea-code-editor';
 import { connect } from 'react-redux'
 
@@ -9,6 +9,7 @@ const options = [
     { value: 'go', label: 'GO' },
     { value: 'java', label: 'Java' },
     { value: 'js', label: 'JavaScript' },
+    { value: 'jsx', label: 'JSX' },
     { value: 'kt', label: 'Kotlin' },
     { value: 'py', label: 'Python' },
     { value: 'php', label: 'PHP' },
