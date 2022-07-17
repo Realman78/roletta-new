@@ -56,6 +56,10 @@ export const connectSocket = userId => {
     socket.on('get-room-details', data => {
         webRTCHandler.handleRoomUpdate(data)
     })
+
+    socket.on('scheduled-room-deletion', (uid) => {
+        roomHandler.manageScheduledRooms(uid)
+    })
 }
 
 export const createNewRoom = (name, roomName) => {

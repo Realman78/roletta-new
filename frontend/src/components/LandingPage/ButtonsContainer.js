@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { styled } from '@mui/system'
 import './ButtonsContainer.css'
 import { useMediaQuery } from 'react-responsive'
 import Modal from '../UI/Modal'
@@ -10,6 +9,8 @@ import CameraDisableButton from './CameraDisableButton'
 import * as roomHandler from '../../rtc/roomHandler'
 import { toast } from 'react-toastify';
 import { testConnection } from '../../api'
+import RoomSchedule from './RoomSchedule'
+import { styled } from '@mui/system'
 
 const MainContainer = styled('div')({
     width: '100%',
@@ -48,10 +49,12 @@ const Input = styled('input')({
 
 
 
-function ButtonsContainer({ audioOnly, setAudioOnly }) {
+function ButtonsContainer({ audioOnly, setAudioOnly, scheduleRoom, userId, setScheduledRooms }) {
     const isMobile = useMediaQuery({ query: '(max-width: 1100px)' });
     const [showCreateRoomModal, setShowCreateRoomModal] = useState(false)
     const [showJoinRoomModal, setShowJoinRoomModal] = useState(false)
+    const [isChecked, setIsChecked] = useState(false)
+    const [schedulingRoomCode, setSchedulingRoomCode] = useState('')
 
     const [roomName, setRoomName] = useState('')
     const handleRoomNameChange = (e) => {
@@ -85,7 +88,7 @@ function ButtonsContainer({ audioOnly, setAudioOnly }) {
     const createNewRoomHandler = async () => {
         const connected = await testConnection()
         if (connected.data?.connection !== 'CONNECTED') {
-            toast.error('Connection to server not established. Reload and try again.', {autoClose: 3000})
+            toast.error('Connection to server not established. Reload and try again.', { autoClose: 3000 })
             return
         }
         if (yourName.trim().length > 0 && roomName.trim().length > 0)
@@ -97,15 +100,35 @@ function ButtonsContainer({ audioOnly, setAudioOnly }) {
     const handleJoinActiveRoom = async () => {
         const connected = await testConnection()
         if (connected.data?.connection !== 'CONNECTED') {
-            toast.error('Connection to server not established. Reload and try again.', {autoClose: 3000})
+            toast.error('Connection to server not established. Reload and try again.', { autoClose: 3000 })
             return
         }
 
         if (yourName.trim().length > 0 && roomCode) {
             const found = roomHandler.joinRoom(roomCode, yourName)
-            if (!found) toast.error('Room with that code not found.', {autoClose: 3000})
+            if (!found) toast.error('Room with that code not found.', { autoClose: 3000 })
         } else {
-            toast.warn('Please fill in the fields.', {autoClose: 3000})
+            toast.warn('Please fill in the fields.', { autoClose: 3000 })
+        }
+    }
+
+    const handleRoomSchedule = async () => {
+        const answer = await scheduleRoom({
+            roomCode: schedulingRoomCode,
+            roomName,
+            creatorName: yourName,
+            creatorUID: userId
+        })
+        if (answer.error) {
+            toast.error(answer.error?.error || answer.error)
+        }
+        if (answer.data){
+            setScheduledRooms(answer.data)
+            toast.success('Room created successfully. Check your list of scheduled rooms.')
+            setShowCreateRoomModal(false)
+            setRoomName('')
+            setIsChecked(false)
+            setYourName('')
         }
     }
 
@@ -128,9 +151,9 @@ function ButtonsContainer({ audioOnly, setAudioOnly }) {
                         </Typography>}
                         <Input value={roomName} onChange={handleRoomNameChange} placeholder='Room name...' />
                     </ModalInputArea>
-
+                    <RoomSchedule isChecked={isChecked} setIsChecked={setIsChecked} schedulingRoomCode={schedulingRoomCode} setSchedulingRoomCode={setSchedulingRoomCode} />
                     <CameraDisableButton audioOnly={audioOnly} handleAudioOnlyChange={handleAudioOnlyChange} />
-                    <button onClick={createNewRoomHandler} style={{ marginTop: '30px' }} className="glow-on-hover" type="button">CREATE A ROOM!</button>
+                    <button onClick={isChecked ? handleRoomSchedule : createNewRoomHandler} style={{ marginTop: '30px' }} className="glow-on-hover" type="button">{isChecked ? 'SCHEDULE' : 'CREATE'} ROOM!</button>
                 </ModalContent>
             </Modal>
 
@@ -157,9 +180,10 @@ function ButtonsContainer({ audioOnly, setAudioOnly }) {
     )
 }
 
-const mapStoreStateToProps = ({ room }) => {
+const mapStoreStateToProps = ({ room, auth }) => {
     return {
-        ...room
+        ...room,
+        ...auth
     }
 }
 

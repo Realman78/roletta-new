@@ -22,3 +22,9 @@
     font-size: 16px;
     margin-left: 5px;
 }
+.scheduledRoomsContainer::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+}
+.scheduledRoomsContainer {
+    -webkit-overflow-scrolling: touch; /* Lets it scroll lazy */
+}

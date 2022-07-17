@@ -15,3 +15,24 @@ export const testConnection = async () => {
         }
     }
 }
+
+export const getScheduledRooms = async (id) => {
+    try {
+        return await apiClient.get('/api/room/schedule/get/' + id)
+    } catch (exception) {
+        return {
+            error: true,
+            exception
+        }
+    }
+}
+export const addScheduledRoom = async (body) => {
+    try {
+        return await apiClient.post('/api/room/schedule/create', body)
+    } catch (exception) {
+        return {
+            error: true,
+            exception
+        }
+    }
+}

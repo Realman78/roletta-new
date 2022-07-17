@@ -25,6 +25,16 @@ const removeConnectedUser = socketId=>{
     }
 }
 
+function randomizer(length) {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() *
+        charactersLength));
+    }
+    return result;
+  }
 
 //rooms
 const addNewActiveRoom = (userId, socketId, name, roomName) => {
@@ -42,7 +52,7 @@ const addNewActiveRoom = (userId, socketId, name, roomName) => {
             }
         ],
         roomId: uuidv4(),
-        roomCode: Math.floor(1000000 + Math.random() * 9999999),
+        roomCode: randomizer(8),
         roomName,
         sharedNotepadContent: '',
         chatMessages: []
@@ -139,6 +149,20 @@ const leaveActiveRoom = (roomId, participantSocketId) => {
     }
 }
 
+const notifyDeletedRoom = (uid) => {
+    const socketID = getByValue(connectedUsers, uid)
+    getSocketServerInstance().to(socketID).emit('scheduled-room-deletion', uid)
+}
+
+
+function getByValue(map, searchValue) {
+  for (let [key, value] of map.entries()) {
+    if (value.userId === searchValue)
+      return key;
+  }
+}
+
+
 module.exports = {
     addNewConnectedUser,
     removeConnectedUser,
@@ -151,5 +175,6 @@ module.exports = {
     leaveActiveRoom,
     updateSharedNotepad,
     updateChatMessages,
-    deleteChatMessage
+    deleteChatMessage,
+    notifyDeletedRoom
 }

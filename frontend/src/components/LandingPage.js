@@ -3,7 +3,9 @@ import { styled } from '@mui/system'
 import ContentWrapper from './LandingPage/ContentWrapper'
 import { connect } from 'react-redux'
 import { getActions } from '../store/actions/authActions'
+import { getActions as getActionsRoom } from '../store/actions/roomActions'
 import { connectSocket } from '../rtc/socketConnection'
+import { randomizer } from '../utils/util'
 
 const MainContainer = styled('div')({
   width: '100%',
@@ -13,12 +15,23 @@ const MainContainer = styled('div')({
   justifyContent: 'center'
 })
 
-function LandingPage({ setUserId, userId }) {
+function LandingPage({ setUserId, userId, getScheduledRooms }) {
 
   useEffect(() => {
-    if (!userId) setUserId('id' + (new Date()).getTime())
-    if (userId) connectSocket(userId)
-  }, [setUserId, userId])
+    if (!userId) {
+      if (localStorage.getItem('UID')) {
+        setUserId(localStorage.getItem('UID'))
+        return
+      }
+      const uid = randomizer(6) + (new Date()).getTime()
+      setUserId(uid)
+      localStorage.setItem('UID', uid)
+    }
+    if (userId) {
+      connectSocket(userId)
+      getScheduledRooms(userId)
+    }
+  }, [setUserId, userId, getScheduledRooms])
 
   return (
     <MainContainer>
@@ -29,7 +42,8 @@ function LandingPage({ setUserId, userId }) {
 
 const mapActionsToProps = dispatch => {
   return {
-    ...getActions(dispatch)
+    ...getActions(dispatch),
+    ...getActionsRoom(dispatch)
   }
 }
 

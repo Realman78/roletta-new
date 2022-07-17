@@ -5,6 +5,7 @@ const initState = {
     isUserRoomCreator: false,
     roomDetails: null,
     activeRooms: [],
+    scheduledRooms: [],
     localStream: null,
     remoteStreams: [],
     chosenStream: null,
@@ -90,6 +91,11 @@ const reducer = (state = initState, action) => {
             return {
                 ...state,
                 isUnread: action.isUnread
+            }
+        case roomActions.SET_SCHEDULED_ROOMS:
+            return {
+                ...state,
+                scheduledRooms: action.scheduledRooms
             }
         default:
             return state

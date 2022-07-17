@@ -73,8 +73,8 @@ function ControlsContainer({ roomDetails, chosenStream, setChosenStream, showEdi
       </ControlButtonWrapper>}
       {(showEditorSettings && !chosenStream) ? <EditorSettings /> : <>
         <TitleContainer>
-          <Tooltip title={'Room Name'} placement={'top'}>
-            <Typography sx={{ margin: '0px', marginTop: '20px', fontSize: '20px', color: 'white', fontWeight: 'bold' }}>
+          <Tooltip title={'Room Name:' +roomDetails?.roomName} placement={'top'}>
+            <Typography sx={{ margin: '0px', marginTop: '20px', fontSize: '20px', color: 'white', fontWeight: 'bold',whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '80%' }}>
               {roomDetails?.roomName}
             </Typography>
           </Tooltip>

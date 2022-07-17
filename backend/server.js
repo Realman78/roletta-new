@@ -3,7 +3,7 @@ const cors = require('cors')
 const http = require('http')
 const PORT = process.env.PORT || 5000
 const socketServer = require('./socket')
-
+const connectDB = require('./db')
 const app = express()
 const server = http.createServer(app)
 socketServer.registerSocketServer(server)
@@ -16,7 +16,13 @@ app.get('/connection', (req,res) => {
     res.send({connection: 'CONNECTED'})
 })
 
+const roomRouter = require('./routes/roomRouter')
+app.use('/api/room', roomRouter)
 
-server.listen(PORT, () => {
-    console.log(`Server is up and running on port ${PORT}`)
+connectDB().then(() => {
+    server.listen(PORT, () => {
+        console.log(`Server is listening on port ${PORT}`)
+    })
+}).catch((e) => {
+    console.log(e)
 })

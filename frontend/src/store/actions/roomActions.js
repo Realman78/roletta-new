@@ -1,3 +1,5 @@
+import * as api from '../../api'
+
 export const roomActions = {
     OPEN_ROOM: 'ROOM.OPEN_ROOM',
     SET_ROOM_DETAILS: 'ROOM.SET_ROOM_DETAILS',
@@ -11,7 +13,8 @@ export const roomActions = {
     SET_CHOSEN_STREAM: 'ROOM.SET_CHOSEN_STREAM',
     SET_SHARED_NOTEPAD_CONTENT: 'ROOM.SET_SHARED_NOTEPAD_CONTENT',
     SET_CHAT_MESSAGES: 'ROOM.SET_CHAT_MESSAGES',
-    SET_UNREAD_MESSAGE: 'ROOM.SET_UNREAD_MESSAGE'
+    SET_UNREAD_MESSAGE: 'ROOM.SET_UNREAD_MESSAGE',
+    SET_SCHEDULED_ROOMS: 'ROOMS.SET_SCHEDULED_ROOMS'
 }
 
 export const getActions = dispatch => {
@@ -22,6 +25,9 @@ export const getActions = dispatch => {
         setChosenStream: chosenStream => dispatch(setChosenStream(chosenStream)),
         setSharedNotepadContent: content => dispatch(setSharedNotepadContent(content)),
         setUnreadMessage: isUnread => dispatch(setUnreadMessage(isUnread)),
+        scheduleRoom: body => dispatch(scheduleRoom(body)),
+        setScheduledRooms: body => dispatch(setScheduledRooms(body)),
+        getScheduledRooms: id => dispatch(getScheduledRooms(id)),
     }
 }
 
@@ -112,5 +118,39 @@ export const setUnreadMessage = isUnread => {
     return {
         type: roomActions.SET_UNREAD_MESSAGE,
         isUnread
+    }
+}
+
+export const setScheduledRooms = scheduledRooms => {
+    return {
+        type: roomActions.SET_SCHEDULED_ROOMS,
+        scheduledRooms
+    }
+}
+
+export const getScheduledRooms = id => {
+    return async dispatch => {
+        const response = await api.getScheduledRooms(id)
+        if (response.error) {
+            if (response.exception.response)
+                return {error:response.exception.response.data}
+            else return{error: 'Something went wrong. Try again later.'}
+        } else {
+            dispatch(setScheduledRooms(response.data))
+            return {data: response.data}
+        }
+    }
+}
+
+const scheduleRoom = body => {
+    return async dispatch => {
+        const response = await api.addScheduledRoom(body)
+        if (response.error) {
+            if (response.exception.response)
+                return {error:response.exception.response.data}
+            else return{error: 'Something went wrong. Try again later.'}
+        } else {
+            return {data: response.data}
+        }
     }
 }

@@ -2,3 +2,6 @@
 .header {
     font-family: 'Roboto',  sans-serif;
 }
+.schedule:hover {
+    color: lightblue !important
+}

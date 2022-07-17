@@ -1,5 +1,5 @@
 import store from '../store/store'
-import { setOpenRoom, setRoomDetails, setActiveRooms, setLocalStream, setRemoteStreams, setScreenSharingStream, setIsUserJoinedOnlyWithAudio, setChosenStream, setIsChatHidden } from '../store/actions/roomActions'
+import { setOpenRoom, setRoomDetails, setActiveRooms, setLocalStream, setRemoteStreams, setScreenSharingStream, setIsUserJoinedOnlyWithAudio, setChosenStream, setIsChatHidden, getScheduledRooms } from '../store/actions/roomActions'
 import * as socketConnection from './socketConnection'
 import * as webRTCHandler from './webRTCHandler'
 import { setUsername } from '../store/actions/authActions'
@@ -87,4 +87,8 @@ export const leaveRoom = (forced) => {
         textareaContent: `${store.getState().auth.username} left the room.`,
         roomId
     })
+}
+
+export const manageScheduledRooms = (uid) => {
+    store.dispatch(getScheduledRooms(uid))
 }
