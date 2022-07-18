@@ -13,7 +13,7 @@ const Modal = ({ handleClose, show, children, isCreate, isRooms, isJoin }) => {
   if (isRooms){
     styles.width = '60%'
   }
-  if (isJoin){
+  if (isJoin && !isShort){
     styles.height = '40%'
   }
   return (

@@ -24,7 +24,7 @@ function CodeEditor({ code, changeHandler, fontSize, language }) {
         <Editor
             value={code}
             language={language}
-            placeholder={`Please enter ${label} code.`}
+            placeholder={`This is a shared editor. Please enter ${label} code.`}
             onChange={changeHandler}
             padding={15}
             style={{

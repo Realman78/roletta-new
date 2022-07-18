@@ -11,6 +11,8 @@ import { getActions } from '../../store/actions/roomActions'
 import EditorSettings from './EditorSettings'
 import { getActionsCode } from '../../store/actions/codeActions'
 import { toast } from 'react-toastify';
+import Modal from '../UI/Modal'
+import HelpContent from './HelpContent'
 
 const MainContainer = styled('div')({
   display: 'flex',
@@ -34,13 +36,22 @@ const ControlButtonWrapper = styled('div')({
   top: '0px',
   right: '0px'
 })
+const HelpButtonWrapper = styled('div')({
+  position: 'absolute',
+  top: '0px',
+  left: '0px'
+})
 
 
 function ControlsContainer({ roomDetails, chosenStream, setChosenStream, showEditorSettings, setShowEditorSettings }) {
   const [copying, setCopying] = useState(false)
+  const [showHelp, setShowHelp] = useState(false)
 
   const handleShowNotepad = () => {
     setChosenStream(null)
+  }
+  const handleShowHelp = () => {
+    setShowHelp(!showHelp)
   }
 
   const handleShowEditorSettings = () => {
@@ -58,6 +69,16 @@ function ControlsContainer({ roomDetails, chosenStream, setChosenStream, showEdi
 
   return (
     <MainContainer style={{ width: roomDetails?.participants?.length > 3 ? '20%' : '30%' }}>
+      <HelpButtonWrapper>
+        <Tooltip title={'I need help!'}>
+          <Typography onClick={handleShowHelp} sx={{ color: 'white', marginLeft: '3px', cursor: 'pointer' }}>
+            Help
+          </Typography>
+        </Tooltip>
+      </HelpButtonWrapper>
+      <Modal show={showHelp} handleClose={handleShowHelp}>
+        <HelpContent />
+      </Modal>
       {chosenStream ? <ControlButtonWrapper>
         <Tooltip placement={'top'} title={'Show Code Editor'}>
           <IconButton onClick={handleShowNotepad} style={{ color: 'white' }}>
@@ -73,8 +94,8 @@ function ControlsContainer({ roomDetails, chosenStream, setChosenStream, showEdi
       </ControlButtonWrapper>}
       {(showEditorSettings && !chosenStream) ? <EditorSettings /> : <>
         <TitleContainer>
-          <Tooltip title={'Room Name:' +roomDetails?.roomName} placement={'top'}>
-            <Typography sx={{ margin: '0px', marginTop: '20px', fontSize: '20px', color: 'white', fontWeight: 'bold',whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'center', maxWidth: '80%' }}>
+          <Tooltip title={'Room Name:' + roomDetails?.roomName} placement={'top'}>
+            <Typography sx={{ margin: '0px', marginTop: '20px', fontSize: '20px', color: 'white', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'center', maxWidth: '80%' }}>
               {roomDetails?.roomName}
             </Typography>
           </Tooltip>

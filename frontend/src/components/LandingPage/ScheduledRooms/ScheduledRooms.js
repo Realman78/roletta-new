@@ -19,7 +19,7 @@ function ScheduledRooms({scheduledRooms, setShowScheduledRooms}) {
     <MainContainer className='scheduledRoomsContainer'>
         {/* <ScheduledRoom isPlaceholder/> */}
         {scheduledRooms.map(r=><ScheduledRoom setShowScheduledRooms={setShowScheduledRooms} key={r._id} createdAt={r.createdAt} roomName={r.roomName} roomCode={r.roomCode} creatorName={r.creatorName}/>)}
-        {scheduledRooms.length < 1 && <Typography sx={{fontSize: '20px', marginTop: '24px'}}>No scheduled rooms.</Typography>}
+        {scheduledRooms.length < 1 && <Typography sx={{fontSize: '20px', marginTop: '24px', color: 'white'}}>No scheduled rooms.</Typography>}
     </MainContainer>
   )
 }

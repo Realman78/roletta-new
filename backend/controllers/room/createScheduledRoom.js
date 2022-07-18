@@ -1,5 +1,6 @@
 const ScheduledRoom = require('../../models/ScheduledRoomSchema')
-const {notifyDeletedRoom} = require('../../socketStore')
+
+
 const createScheduledRoom = async (req, res) => {
     if(!req.body) return res.status(400).send({error: 'No body'})
     let userScheduledRooms = await ScheduledRoom.find({creatorUID: req.body.creatorUID})
@@ -9,9 +10,10 @@ const createScheduledRoom = async (req, res) => {
 
     const scheduledRoom = await ScheduledRoom.create(req.body)
     setTimeout(async ()=>{
+        const {notifyDeletedRoom} = require('../../socketStore')
         const r = await ScheduledRoom.findByIdAndDelete(scheduledRoom._id).catch(e=>console.log(e))
         if (r) notifyDeletedRoom(r.creatorUID)
-    }, 600*1000)
+    }, 72*60*60*1000)
 
     userScheduledRooms = [...userScheduledRooms, scheduledRoom]
     res.status(201).send(userScheduledRooms)

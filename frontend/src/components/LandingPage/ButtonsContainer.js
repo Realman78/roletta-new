@@ -50,7 +50,7 @@ const Input = styled('input')({
 
 
 
-function ButtonsContainer({ audioOnly, setAudioOnly, scheduleRoom, userId, setScheduledRooms, scheduledRooms, getScheduledRoom, waitingInfo, setWaitingInfo }) {
+function ButtonsContainer({ audioOnly, setAudioOnly, scheduleRoom, userId, setScheduledRooms, scheduledRooms, getScheduledRoom, waitingInfo, setWaitingInfo, activeRooms }) {
     const isMobile = useMediaQuery({ query: '(max-width: 1100px)' });
     const [showCreateRoomModal, setShowCreateRoomModal] = useState(false)
     const [showJoinRoomModal, setShowJoinRoomModal] = useState(false)
@@ -115,6 +115,10 @@ function ButtonsContainer({ audioOnly, setAudioOnly, scheduleRoom, userId, setSc
             //user tries to join a room he scheduled
             if (scheduledRooms.find(r => r.roomCode === roomCode)) {
                 if (window.confirm('You are trying to join a room you scheduled. Do you wish to proceed?') === false) return
+                if (activeRooms.find(r => r.roomCode === roomCode)) {
+                    roomHandler.joinRoom(roomCode, yourName.trim())
+                    return
+                }
                 roomHandler.createNewRoom(yourName.trim(), roomName.trim(), roomCode)
                 return
             }
@@ -131,7 +135,7 @@ function ButtonsContainer({ audioOnly, setAudioOnly, scheduleRoom, userId, setSc
                         roomCode,
                         yourName: yourName.trim()
                     })
-                    return 
+                    return
                 }
                 toast.error('Room with that code not found.', { autoClose: 3000 })
             }
@@ -141,6 +145,7 @@ function ButtonsContainer({ audioOnly, setAudioOnly, scheduleRoom, userId, setSc
     }
 
     const handleRoomSchedule = async () => {
+        if (yourName.trim().length < 1 || roomName.trim().length < 1) return toast.warn('Please fill in the fields.', { autoClose: 3000 })
         const answer = await scheduleRoom({
             roomCode: schedulingRoomCode,
             roomName,
@@ -188,20 +193,20 @@ function ButtonsContainer({ audioOnly, setAudioOnly, scheduleRoom, userId, setSc
             <Modal handleClose={toggleShowJoinModal} show={showJoinRoomModal} isJoin>
                 <ModalContent>
                     {waitingInfo ? temp : <>
-                    <ModalInputArea>
-                        {!isMobile && <Typography sx={{ fontSize: '1.4rem', color: 'white', textAlign: 'center', marginRight: '20px' }}>
-                            Your name
-                        </Typography>}
-                        <Input value={yourName} onChange={handleYourNameChange} placeholder='Your name...' />
-                    </ModalInputArea>
-                    <ModalInputArea>
-                        {!isMobile && <Typography sx={{ fontSize: '1.4rem', color: 'white', textAlign: 'center', marginRight: '10px' }}>
-                            Room code
-                        </Typography>}
-                        <Input value={roomCode} onChange={handleRoomCodehange} placeholder='Room code...' />
-                    </ModalInputArea>
-                    <CameraDisableButton audioOnly={audioOnly} handleAudioOnlyChange={handleAudioOnlyChange} />
-                    <button onClick={handleJoinActiveRoom} style={{ marginTop: '30px' }} className="glow-on-hover" type="button">JOIN A ROOM!</button>
+                        <ModalInputArea>
+                            {!isMobile && <Typography sx={{ fontSize: '1.4rem', color: 'white', textAlign: 'center', marginRight: '20px' }}>
+                                Your name
+                            </Typography>}
+                            <Input value={yourName} onChange={handleYourNameChange} placeholder='Your name...' />
+                        </ModalInputArea>
+                        <ModalInputArea>
+                            {!isMobile && <Typography sx={{ fontSize: '1.4rem', color: 'white', textAlign: 'center', marginRight: '10px' }}>
+                                Room code
+                            </Typography>}
+                            <Input value={roomCode} onChange={handleRoomCodehange} placeholder='Room code...' />
+                        </ModalInputArea>
+                        <CameraDisableButton audioOnly={audioOnly} handleAudioOnlyChange={handleAudioOnlyChange} />
+                        <button onClick={handleJoinActiveRoom} style={{ marginTop: '30px' }} className="glow-on-hover" type="button">JOIN A ROOM!</button>
                     </>}
                 </ModalContent>
             </Modal>

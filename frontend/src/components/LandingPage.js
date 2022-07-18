@@ -6,6 +6,7 @@ import { getActions } from '../store/actions/authActions'
 import { getActions as getActionsRoom } from '../store/actions/roomActions'
 import { connectSocket } from '../rtc/socketConnection'
 import { randomizer } from '../utils/util'
+import { Typography } from '@mui/material'
 
 const MainContainer = styled('div')({
   width: '100%',
@@ -14,6 +15,26 @@ const MainContainer = styled('div')({
   alignItems: 'center',
   justifyContent: 'center'
 })
+const checkRTC = () => {
+  try { // or if (webkitRTCPeerConnection) {...}
+    var pc = new window.RTCPeerConnection({
+      iceServers: [
+        {
+          urls: "stun:stun.l.google.com:19302",
+        },
+      ],
+    });
+    if (pc && pc.createDataChannel) {
+      var dc = pc.createDataChannel("sendDataChannel", { reliable: false });
+      if (dc) {
+        return true
+      }
+    }
+  } catch (e) {
+    return false
+  }
+  return false
+}
 
 function LandingPage({ setUserId, userId, getScheduledRooms }) {
 
@@ -33,9 +54,11 @@ function LandingPage({ setUserId, userId, getScheduledRooms }) {
     }
   }, [setUserId, userId, getScheduledRooms])
 
+
   return (
     <MainContainer>
       <ContentWrapper />
+      {(!checkRTC()) && <Typography style={{ position: 'absolute', left: '5px', bottom: '5px', cursor: 'pointer', fontSize: '18px', textDecoration: 'underline', color: 'red', fontWeight: 'bold', margin: '0px', marginRight: '3px', padding: '0px' }}>Your browser doesn't support WebRTC. You won't be able to hear or see the other person.</Typography>}
     </MainContainer>
   )
 }

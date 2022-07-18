@@ -1,5 +1,6 @@
 const {v4:uuidv4} = require('uuid')
 const {deleteScheduledRoom} = require('./controllers/room/roomController')
+
 const connectedUsers = new Map()
 let activeRooms = []
 
@@ -152,8 +153,9 @@ const leaveActiveRoom = (roomId, participantSocketId) => {
     }
 }
 
-const notifyDeletedRoom = (uid) => {
+function notifyDeletedRoom (uid) {
     const socketID = getByValue(connectedUsers, uid)
+    if (!socketID) return
     getSocketServerInstance().to(socketID).emit('scheduled-room-deletion', uid)
 }
 

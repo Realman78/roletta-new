@@ -40,7 +40,7 @@ const getConfiguration = () => {
         return {
             iceServers: [
                 {
-                    urls: ['stun:fr-turn1.xirsys.com','stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
+                    urls: "stun:stun.l.google.com:19302",
                 },
             ],
         }
@@ -54,6 +54,7 @@ export const getLocalStreamPreview = (onlyAudio = false, callback) => {
         store.dispatch(setLocalStream(stream))
         callback()
     }).catch(e => {
+        alert('Access to camera/microphone has been blocked. Please enable access.')
         console.log('cannot get access to localstream' + e)
     })
 }

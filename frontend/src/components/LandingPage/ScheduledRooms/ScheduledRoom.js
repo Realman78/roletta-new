@@ -31,7 +31,7 @@ const ExpireContainer = styled('div')({
 function ScheduledRoom({ roomName, roomCode, isPlaceholder, createdAt, creatorName, setShowScheduledRooms, activeRooms }) {
     const [copying, setCopying] = useState(false)
     const creationDate = useMemo(()=>new Date(createdAt.slice(0, -5)), [createdAt])
-    const closingDate = useMemo(() => new Date(creationDate.getTime() + 10 * 60 * 1000), [creationDate])
+    const closingDate = useMemo(() => new Date(creationDate.getTime() + 72*60*60*1000), [creationDate])
     const [timeRemaining, setTimeRemaining] = useState(Math.trunc((closingDate.getTime() - convertDateToUTC(new Date()).getTime()) / (1000)).toString())
 
 
@@ -40,7 +40,7 @@ function ScheduledRoom({ roomName, roomCode, isPlaceholder, createdAt, creatorNa
             const date = new Date()
             let temp = Math.trunc((closingDate.getTime() - convertDateToUTC(date).getTime()) / (1000))
             if (temp > 86400){
-                setTimeRemaining(Math.trunc(temp/86400) + ` day${temp < 172800 ? '' : 's'}.`)
+                setTimeRemaining(Math.trunc(temp/86400) + ` day${temp < 172800 ? '' : 's'} ${temp > 90000 ? `and ${Math.trunc((temp%86400)/3600)} hours` : ''}.`)
             }else if (temp > 3600){
                 setTimeRemaining(Math.trunc(temp/3600) + ` hour${temp < 7200 ? '' : 's'}.`)
             }else if (temp > 60){
