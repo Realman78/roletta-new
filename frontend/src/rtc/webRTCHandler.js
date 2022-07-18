@@ -87,7 +87,7 @@ export const prepareNewPeerConnection = (connUserSocketId, isInitiator) => {
     })
 
     peers[connUserSocketId].on('stream', remoteStream => {
-        console.log('Remote stream came 💦')
+        console.log('Remote stream came')
         remoteStream.connUserSocketId = connUserSocketId
         addNewRemoteStream(remoteStream)
         socketConnection.getRoomDetails(store.getState().room.roomDetails.roomId)

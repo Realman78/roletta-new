@@ -77,7 +77,7 @@ function ScheduledRoom({ roomName, roomCode, isPlaceholder, createdAt, creatorNa
                 </Typography>
             </ExpireContainer>
             <Tooltip title={'Room Name: ' + roomName} >
-                <Typography sx={{ color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '34%', fontSize: '20px', textAlign: 'center' }}>
+                <Typography sx={{ color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '38%', fontSize: '20px', textAlign: 'center' }}>
                     {isPlaceholder ? 'Room Name' : roomName}
                 </Typography>
             </Tooltip>
