@@ -26,6 +26,16 @@ export const getScheduledRooms = async (id) => {
         }
     }
 }
+export const getScheduledRoom = async (roomCode) => {
+    try {
+        return await apiClient.get('/api/room/schedule/getsingle/' + roomCode)
+    } catch (exception) {
+        return {
+            error: true,
+            exception
+        }
+    }
+}
 export const addScheduledRoom = async (body) => {
     try {
         return await apiClient.post('/api/room/schedule/create', body)

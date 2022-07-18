@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import { testConnection } from '../../api'
 import RoomSchedule from './RoomSchedule'
 import { styled } from '@mui/system'
+import WaitingContainer from './WaitingContainer'
 
 const MainContainer = styled('div')({
     width: '100%',
@@ -49,12 +50,13 @@ const Input = styled('input')({
 
 
 
-function ButtonsContainer({ audioOnly, setAudioOnly, scheduleRoom, userId, setScheduledRooms }) {
+function ButtonsContainer({ audioOnly, setAudioOnly, scheduleRoom, userId, setScheduledRooms, scheduledRooms, getScheduledRoom, waitingInfo, setWaitingInfo }) {
     const isMobile = useMediaQuery({ query: '(max-width: 1100px)' });
     const [showCreateRoomModal, setShowCreateRoomModal] = useState(false)
     const [showJoinRoomModal, setShowJoinRoomModal] = useState(false)
     const [isChecked, setIsChecked] = useState(false)
     const [schedulingRoomCode, setSchedulingRoomCode] = useState('')
+    const [temp, setTemp] = useState(<></>)
 
     const [roomName, setRoomName] = useState('')
     const handleRoomNameChange = (e) => {
@@ -75,10 +77,15 @@ function ButtonsContainer({ audioOnly, setAudioOnly, scheduleRoom, userId, setSc
         setShowCreateRoomModal(!showCreateRoomModal)
         setRoomName('')
         setYourName('')
+        setIsChecked(false)
     }
 
     const toggleShowJoinModal = () => {
         setShowJoinRoomModal(!showJoinRoomModal)
+        setRoomCode('')
+        setWaitingInfo(null)
+        setYourName('')
+        setTemp(<></>)
     }
 
     const handleAudioOnlyChange = () => {
@@ -92,7 +99,7 @@ function ButtonsContainer({ audioOnly, setAudioOnly, scheduleRoom, userId, setSc
             return
         }
         if (yourName.trim().length > 0 && roomName.trim().length > 0)
-            roomHandler.createNewRoom(yourName, roomName)
+            roomHandler.createNewRoom(yourName.trim(), roomName.trim())
         else {
             toast.warn('Please fill in the fields.')
         }
@@ -105,8 +112,29 @@ function ButtonsContainer({ audioOnly, setAudioOnly, scheduleRoom, userId, setSc
         }
 
         if (yourName.trim().length > 0 && roomCode) {
+            //user tries to join a room he scheduled
+            if (scheduledRooms.find(r => r.roomCode === roomCode)) {
+                if (window.confirm('You are trying to join a room you scheduled. Do you wish to proceed?') === false) return
+                roomHandler.createNewRoom(yourName.trim(), roomName.trim(), roomCode)
+                return
+            }
+
             const found = roomHandler.joinRoom(roomCode, yourName)
-            if (!found) toast.error('Room with that code not found.', { autoClose: 3000 })
+            if (!found) {
+                const answer = await getScheduledRoom(roomCode)
+                if (answer.error) {
+                    toast.error(answer.error?.error || answer.error)
+                }
+                if (answer.data) {
+                    setTemp(<WaitingContainer roomName={answer.data.roomName} creatorName={answer.data.creatorName} />)
+                    setWaitingInfo({
+                        roomCode,
+                        yourName: yourName.trim()
+                    })
+                    return 
+                }
+                toast.error('Room with that code not found.', { autoClose: 3000 })
+            }
         } else {
             toast.warn('Please fill in the fields.', { autoClose: 3000 })
         }
@@ -122,7 +150,7 @@ function ButtonsContainer({ audioOnly, setAudioOnly, scheduleRoom, userId, setSc
         if (answer.error) {
             toast.error(answer.error?.error || answer.error)
         }
-        if (answer.data){
+        if (answer.data) {
             setScheduledRooms(answer.data)
             toast.success('Room created successfully. Check your list of scheduled rooms.')
             setShowCreateRoomModal(false)
@@ -157,8 +185,9 @@ function ButtonsContainer({ audioOnly, setAudioOnly, scheduleRoom, userId, setSc
                 </ModalContent>
             </Modal>
 
-            <Modal handleClose={toggleShowJoinModal} show={showJoinRoomModal}>
+            <Modal handleClose={toggleShowJoinModal} show={showJoinRoomModal} isJoin>
                 <ModalContent>
+                    {waitingInfo ? temp : <>
                     <ModalInputArea>
                         {!isMobile && <Typography sx={{ fontSize: '1.4rem', color: 'white', textAlign: 'center', marginRight: '20px' }}>
                             Your name
@@ -173,6 +202,7 @@ function ButtonsContainer({ audioOnly, setAudioOnly, scheduleRoom, userId, setSc
                     </ModalInputArea>
                     <CameraDisableButton audioOnly={audioOnly} handleAudioOnlyChange={handleAudioOnlyChange} />
                     <button onClick={handleJoinActiveRoom} style={{ marginTop: '30px' }} className="glow-on-hover" type="button">JOIN A ROOM!</button>
+                    </>}
                 </ModalContent>
             </Modal>
 

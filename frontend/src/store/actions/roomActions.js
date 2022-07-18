@@ -14,7 +14,8 @@ export const roomActions = {
     SET_SHARED_NOTEPAD_CONTENT: 'ROOM.SET_SHARED_NOTEPAD_CONTENT',
     SET_CHAT_MESSAGES: 'ROOM.SET_CHAT_MESSAGES',
     SET_UNREAD_MESSAGE: 'ROOM.SET_UNREAD_MESSAGE',
-    SET_SCHEDULED_ROOMS: 'ROOMS.SET_SCHEDULED_ROOMS'
+    SET_SCHEDULED_ROOMS: 'ROOM.SET_SCHEDULED_ROOMS',
+    SET_WAITING_INFO: 'ROOM.SET_WAITING_INFO'
 }
 
 export const getActions = dispatch => {
@@ -28,6 +29,8 @@ export const getActions = dispatch => {
         scheduleRoom: body => dispatch(scheduleRoom(body)),
         setScheduledRooms: body => dispatch(setScheduledRooms(body)),
         getScheduledRooms: id => dispatch(getScheduledRooms(id)),
+        getScheduledRoom: roomCode => dispatch(getScheduledRoom(roomCode)),
+        setWaitingInfo: waitingInfo => dispatch(setWaitingInfo(waitingInfo)),
     }
 }
 
@@ -141,6 +144,18 @@ export const getScheduledRooms = id => {
         }
     }
 }
+export const getScheduledRoom = roomCode => {
+    return async dispatch => {
+        const response = await api.getScheduledRoom(roomCode)
+        if (response.error) {
+            if (response.exception.response)
+                return {error:response.exception.response.data}
+            else return{error: 'Something went wrong. Try again later.'}
+        } else {
+            return {data: response.data}
+        }
+    }
+}
 
 const scheduleRoom = body => {
     return async dispatch => {
@@ -152,5 +167,12 @@ const scheduleRoom = body => {
         } else {
             return {data: response.data}
         }
+    }
+}
+
+export const setWaitingInfo = waitingInfo => {
+    return {
+        type: roomActions.SET_WAITING_INFO,
+        waitingInfo
     }
 }

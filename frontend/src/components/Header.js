@@ -55,7 +55,7 @@ function Header({ isUserInRoom, roomDetails, scheduledRooms }) {
             {(isUserInRoom && roomDetails) && <Typography sx={{ fontSize: isMobile ? '20px' : '32px', color: 'white', fontWeight: 'bold', margin: '0px', padding: '0px', textShadow: '0 0 0.15em #3C50B1', filter: 'blur(0.007em)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{roomDetails?.roomName}</Typography>}
             {(isUserInRoom && !isMobile) && <Typography onClick={handleCopyCode} style={{ cursor: 'pointer', fontSize: isMobile ? '12px' : '20px', color: copying ? 'lightblue' : 'white', fontWeight: 'bold', margin: '0px', marginRight: '3px', padding: '0px', textShadow: '0 0 0.15em #3C50B1', filter: 'blur(0.007em)' }}>Code: {roomDetails?.roomCode}</Typography>}
             {(!isUserInRoom && scheduledRooms.length > 0) && <Typography className={'schedule'} onClick={handleShowScheduledRooms} style={{position: 'absolute', right: '5px', cursor: 'pointer', fontSize: isMobile ? '12px' : '20px', textDecoration: 'underline', color: copying ? 'lightblue' : 'white', fontWeight: 'bold', margin: '0px', marginRight: '3px', padding: '0px', textShadow: '0 0 0.15em #3C50B1', filter: 'blur(0.007em)' }}>See Scheduled Rooms ({scheduledRooms.length})</Typography>}
-            <Modal isRooms show={(showScheduledRooms && !isUserInRoom)} handleClose={handleShowScheduledRooms}><ScheduledRoomsWrapper /></Modal>
+            <Modal isRooms show={(showScheduledRooms && !isUserInRoom)} handleClose={handleShowScheduledRooms}><ScheduledRoomsWrapper setShowScheduledRooms={setShowScheduledRooms}/></Modal>
         </MainContainer>}
     </>
     )

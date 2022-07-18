@@ -1,7 +1,7 @@
 import './modal.css';
 import { useMediaQuery } from 'react-responsive'
 
-const Modal = ({ handleClose, show, children, isCreate, isRooms }) => {
+const Modal = ({ handleClose, show, children, isCreate, isRooms, isJoin }) => {
   const showHideClassName = show ? "modal display-block" : "modal display-none";
   const isMobile = useMediaQuery({ query: '(max-width: 1000px)' });
   const isShort = useMediaQuery({ query: '(max-height: 600px)' });
@@ -12,6 +12,9 @@ const Modal = ({ handleClose, show, children, isCreate, isRooms }) => {
   }
   if (isRooms){
     styles.width = '60%'
+  }
+  if (isJoin){
+    styles.height = '40%'
   }
   return (
     <div className={showHideClassName}>

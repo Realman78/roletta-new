@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const connectDB = async ()=>{
     try{
-        const conn = await mongoose.connect('mongodb+srv://admin:admin@rolettacluster.h4suw.mongodb.net/?retryWrites=true&w=majority')
+        const conn = await mongoose.connect('mongodb+srv://admin:admin@rolettacluster.h4suw.mongodb.net/RolettaDB?retryWrites=true&w=majority')
 
         console.log('MongoDB connected: ' + conn.connection.host)
     }catch(e){

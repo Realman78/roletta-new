@@ -14,7 +14,8 @@ const initState = {
     isScreenSharingActive: false,
     isUserJoinedWithOnlyAudio: false,
     isChatHidden: false,
-    isUnread: false
+    isUnread: false,
+    waitingInfo: null
 }
 
 const reducer = (state = initState, action) => {
@@ -96,6 +97,11 @@ const reducer = (state = initState, action) => {
             return {
                 ...state,
                 scheduledRooms: action.scheduledRooms
+            }
+        case roomActions.SET_WAITING_INFO:
+            return {
+                ...state,
+                waitingInfo: action.waitingInfo
             }
         default:
             return state

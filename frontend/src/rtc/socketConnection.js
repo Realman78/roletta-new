@@ -60,10 +60,14 @@ export const connectSocket = userId => {
     socket.on('scheduled-room-deletion', (uid) => {
         roomHandler.manageScheduledRooms(uid)
     })
+
+    socket.on('wait-resolve', roomCode => {
+        roomHandler.checkJoin(roomCode)
+    })
 }
 
-export const createNewRoom = (name, roomName) => {
-    socket.emit('room-create', {name,roomName})
+export const createNewRoom = (name, roomName, roomCode) => {
+    socket.emit('room-create', {name,roomName,roomCode})
 }
 
 export const joinRoom = data => {

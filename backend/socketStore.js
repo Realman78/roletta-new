@@ -1,5 +1,5 @@
 const {v4:uuidv4} = require('uuid')
-
+const {deleteScheduledRoom} = require('./controllers/room/roomController')
 const connectedUsers = new Map()
 let activeRooms = []
 
@@ -37,7 +37,8 @@ function randomizer(length) {
   }
 
 //rooms
-const addNewActiveRoom = (userId, socketId, name, roomName) => {
+const addNewActiveRoom = (userId, socketId, name, roomName, roomCode) => {
+    const _roomCode = roomCode || randomizer(8)
     const newActiveRoom = {
         roomCreator: {
             userId,
@@ -52,7 +53,7 @@ const addNewActiveRoom = (userId, socketId, name, roomName) => {
             }
         ],
         roomId: uuidv4(),
-        roomCode: randomizer(8),
+        roomCode: _roomCode,
         roomName,
         sharedNotepadContent: '',
         chatMessages: []
@@ -145,6 +146,8 @@ const leaveActiveRoom = (roomId, participantSocketId) => {
         activeRooms = activeRooms.filter(room => room.roomId !== roomId)
         if (copyOfAR.participants.length > 0){
             activeRooms.push(copyOfAR)
+        }else {
+            if (deleteScheduledRoom(activeRoom.roomCode)) getSocketServerInstance().to(activeRoom.roomCreator.socketId).emit('scheduled-room-deletion', activeRoom.roomCreator.userId)
         }
     }
 }

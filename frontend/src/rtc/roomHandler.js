@@ -1,16 +1,16 @@
 import store from '../store/store'
-import { setOpenRoom, setRoomDetails, setActiveRooms, setLocalStream, setRemoteStreams, setScreenSharingStream, setIsUserJoinedOnlyWithAudio, setChosenStream, setIsChatHidden, getScheduledRooms } from '../store/actions/roomActions'
+import { setOpenRoom, setRoomDetails, setActiveRooms, setLocalStream, setRemoteStreams, setScreenSharingStream, setIsUserJoinedOnlyWithAudio, setChosenStream, setIsChatHidden, getScheduledRooms, setWaitingInfo } from '../store/actions/roomActions'
 import * as socketConnection from './socketConnection'
 import * as webRTCHandler from './webRTCHandler'
 import { setUsername } from '../store/actions/authActions'
 import { toast } from 'react-toastify'
 
-export const createNewRoom = (name, roomName) => {
+export const createNewRoom = (name, roomName, roomCode='', creatorName='') => {
     const successCallback = () => {
         store.dispatch(setOpenRoom(true, true))
         store.dispatch(setIsUserJoinedOnlyWithAudio(store.getState().room.audioOnly))
         store.dispatch(setUsername(name))
-        socketConnection.createNewRoom(name, roomName)
+        socketConnection.createNewRoom(name, roomName, roomCode, creatorName)
     }
     const audioOnly = store.getState().room.audioOnly
     webRTCHandler.getLocalStreamPreview(audioOnly, successCallback)
@@ -54,6 +54,14 @@ export const joinRoom = (roomCode, yourName) => {
     const audioOnly = store.getState().room.audioOnly
     webRTCHandler.getLocalStreamPreview(audioOnly, successCallback)
     return true
+}
+
+export const checkJoin = roomCode => {
+    if (store.getState().room.waitingInfo && roomCode === store.getState().room.waitingInfo.roomCode){
+        const {roomCode, yourName} = store.getState().room.waitingInfo
+        joinRoom(roomCode, yourName)
+        store.dispatch(setWaitingInfo(null))
+    }
 }
 
 export const leaveRoom = (forced) => {
